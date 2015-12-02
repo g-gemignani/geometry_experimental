@@ -53,7 +53,7 @@ namespace tf2_ros
       struct GoalInfo
       {
         GoalHandle handle;
-        ros::Time end_time;
+        builtin_interfaces::msg::Time end_time;
       };
 
     public:
@@ -65,7 +65,7 @@ namespace tf2_ros
     private:
       void goalCB(GoalHandle gh);
       void cancelCB(GoalHandle gh);
-      void checkTransforms(const ros::TimerEvent& e);
+      void checkTransforms(const builtin_interfaces::msg::TimerEvent& e);
       bool canTransform(GoalHandle gh);
       geometry_msgs::TransformStamped lookupTransform(GoalHandle gh);
 
@@ -73,7 +73,7 @@ namespace tf2_ros
       LookupTransformServer server_;
       std::list<GoalInfo> active_goals_;
       boost::mutex mutex_;
-      ros::Timer check_timer_;
+      builtin_interfaces::msg::Timer check_timer_;
   };
 }
 #endif

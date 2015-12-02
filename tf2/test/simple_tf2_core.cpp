@@ -30,7 +30,6 @@
 #include <gtest/gtest.h>
 #include <tf2/buffer_core.h>
 #include <sys/time.h>
-#include <ros/ros.h>
 #include "tf2/LinearMath/Vector3.h"
 #include "tf2/exceptions.h"
 
@@ -60,7 +59,7 @@ void generate_rand_vectors(double scale, uint64_t runs, std::vector<double>& xva
 TEST(tf2, setTransformFail)
 {
   tf2::BufferCore tfc;
-  geometry_msgs::TransformStamped st;
+  geometry_msgs::msg::TransformStamped st;
   EXPECT_FALSE(tfc.setTransform(st, "authority1"));
   
 }
@@ -68,9 +67,10 @@ TEST(tf2, setTransformFail)
 TEST(tf2, setTransformValid)
 {
   tf2::BufferCore tfc;
-  geometry_msgs::TransformStamped st;
+  geometry_msgs::msg::TransformStamped st;
   st.header.frame_id = "foo";
-  st.header.stamp = ros::Time(1.0);
+  st.header.stamp = builtin_interfaces::msg::Time();
+  st.header.stamp.sec = 1;
   st.child_frame_id = "child";
   st.transform.rotation.w = 1;
   EXPECT_TRUE(tfc.setTransform(st, "authority1"));
@@ -94,9 +94,10 @@ TEST(tf2_canTransform, Nothing_Exists)
 TEST(tf2_lookupTransform, LookupException_One_Exists)
 {
   tf2::BufferCore tfc;
-  geometry_msgs::TransformStamped st;
+  geometry_msgs::msg::TransformStamped st;
   st.header.frame_id = "foo";
-  st.header.stamp = ros::Time(1.0);
+  st.header.stamp = builtin_interfaces::msg::Time();
+  st.header.stamp.sec = 1;
   st.child_frame_id = "child";
   st.transform.rotation.w = 1;
   EXPECT_TRUE(tfc.setTransform(st, "authority1"));
@@ -107,9 +108,10 @@ TEST(tf2_lookupTransform, LookupException_One_Exists)
 TEST(tf2_canTransform, One_Exists)
 {
   tf2::BufferCore tfc;
-  geometry_msgs::TransformStamped st;
+  geometry_msgs::msg::TransformStamped st;
   st.header.frame_id = "foo";
-  st.header.stamp = ros::Time(1.0);
+  st.header.stamp = builtin_interfaces::msg::Time();
+  st.header.stamp.sec = 1;
   st.child_frame_id = "child";
   st.transform.rotation.w = 1;
   EXPECT_TRUE(tfc.setTransform(st, "authority1"));
@@ -119,6 +121,5 @@ TEST(tf2_canTransform, One_Exists)
 
 int main(int argc, char **argv){
   testing::InitGoogleTest(&argc, argv);
-  ros::Time::init(); //needed for ros::TIme::now()
   return RUN_ALL_TESTS();
 }

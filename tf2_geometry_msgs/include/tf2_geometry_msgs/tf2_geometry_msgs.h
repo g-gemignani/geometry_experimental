@@ -62,7 +62,7 @@ KDL::Frame gmTransformToKDL(const geometry_msgs::TransformStamped& t)
 // method to extract timestamp from object
 template <>
 inline
-  const ros::Time& getTimestamp(const geometry_msgs::Vector3Stamped& t) {return t.header.stamp;}
+  const builtin_interfaces::msg::Time& getTimestamp(const geometry_msgs::Vector3Stamped& t) {return t.header.stamp;}
 
 // method to extract frame id from object
 template <>
@@ -101,7 +101,7 @@ void fromMsg(const geometry_msgs::Vector3Stamped& msg, geometry_msgs::Vector3Sta
 // method to extract timestamp from object
 template <>
 inline
-  const ros::Time& getTimestamp(const geometry_msgs::PointStamped& t)  {return t.header.stamp;}
+  const builtin_interfaces::msg::Time& getTimestamp(const geometry_msgs::PointStamped& t)  {return t.header.stamp;}
 
 // method to extract frame id from object
 template <>
@@ -139,7 +139,7 @@ void fromMsg(const geometry_msgs::PointStamped& msg, geometry_msgs::PointStamped
 // method to extract timestamp from object
 template <>
 inline
-  const ros::Time& getTimestamp(const geometry_msgs::PoseStamped& t)  {return t.header.stamp;}
+  const builtin_interfaces::msg::Time& getTimestamp(const geometry_msgs::PoseStamped& t)  {return t.header.stamp;}
 
 // method to extract frame id from object
 template <>
@@ -204,7 +204,7 @@ void fromMsg(const geometry_msgs::Quaternion& in, tf2::Quaternion& out)
 // method to extract timestamp from object
 template <>
 inline
-const ros::Time& getTimestamp(const geometry_msgs::QuaternionStamped& t)  {return t.header.stamp;}
+const builtin_interfaces::msg::Time& getTimestamp(const geometry_msgs::QuaternionStamped& t)  {return t.header.stamp;}
 
 // method to extract frame id from object
 template <>
@@ -267,7 +267,7 @@ void fromMsg(const geometry_msgs::QuaternionStamped& in, tf2::Stamped<tf2::Quate
 // method to extract timestamp from object
 template <>
 inline
-const ros::Time& getTimestamp(const geometry_msgs::TransformStamped& t)  {return t.header.stamp;}
+const builtin_interfaces::msg::Time& getTimestamp(const geometry_msgs::TransformStamped& t)  {return t.header.stamp;}
 
 // method to extract frame id from object
 template <>

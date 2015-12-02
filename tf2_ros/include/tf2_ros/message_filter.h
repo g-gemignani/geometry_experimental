@@ -300,7 +300,7 @@ public:
     namespace mt = ros::message_traits;
     const MConstPtr& message = evt.getMessage();
     std::string frame_id = stripSlash(mt::FrameId<M>::value(*message));
-    ros::Time stamp = mt::TimeStamp<M>::value(*message);
+    builtin_interfaces::msg::Time stamp = mt::TimeStamp<M>::value(*message);
 
     if (frame_id.empty())
     {
@@ -419,7 +419,7 @@ public:
     boost::shared_ptr<std::map<std::string, std::string> > header(new std::map<std::string, std::string>);
     (*header)["callerid"] = "unknown";
     ros::WallTime n = ros::WallTime::now();
-    ros::Time t(n.sec, n.nsec);
+    builtin_interfaces::msg::Time t(n.sec, n.nsec);
     add(MEvent(message, header, t));
   }
 
@@ -462,7 +462,7 @@ private:
   }
 
   void transformable(tf2::TransformableRequestHandle request_handle, const std::string& target_frame, const std::string& source_frame,
-                     ros::Time time, tf2::TransformableResult result)
+                     builtin_interfaces::msg::Time time, tf2::TransformableResult result)
   {
     namespace mt = ros::message_traits;
 
@@ -497,7 +497,7 @@ private:
     bool can_transform = true;
     const MConstPtr& message = info.event.getMessage();
     std::string frame_id = stripSlash(mt::FrameId<M>::value(*message));
-    ros::Time stamp = mt::TimeStamp<M>::value(*message);
+    builtin_interfaces::msg::Time stamp = mt::TimeStamp<M>::value(*message);
 
     if (result == tf2::TransformAvailable)
     {
@@ -701,7 +701,7 @@ private:
   uint64_t incoming_message_count_;
   uint64_t dropped_message_count_;
 
-  ros::Time last_out_the_back_stamp_;
+  builtin_interfaces::msg::Time last_out_the_back_stamp_;
   std::string last_out_the_back_frame_;
 
   ros::WallTime next_failure_warning_;

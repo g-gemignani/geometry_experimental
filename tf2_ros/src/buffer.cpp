@@ -50,7 +50,7 @@ Buffer::Buffer(ros::Duration cache_time, bool debug) :
 
 geometry_msgs::TransformStamped 
 Buffer::lookupTransform(const std::string& target_frame, const std::string& source_frame,
-                        const ros::Time& time, const ros::Duration timeout) const
+                        const builtin_interfaces::msg::Time& time, const ros::Duration timeout) const
 {
   canTransform(target_frame, source_frame, time, timeout);
   return lookupTransform(target_frame, source_frame, time);
@@ -58,8 +58,8 @@ Buffer::lookupTransform(const std::string& target_frame, const std::string& sour
 
 
 geometry_msgs::TransformStamped 
-Buffer::lookupTransform(const std::string& target_frame, const ros::Time& target_time,
-                        const std::string& source_frame, const ros::Time& source_time,
+Buffer::lookupTransform(const std::string& target_frame, const builtin_interfaces::msg::Time& target_time,
+                        const std::string& source_frame, const builtin_interfaces::msg::Time& source_time,
                         const std::string& fixed_frame, const ros::Duration timeout) const
 {
   canTransform(target_frame, target_time, source_frame, source_time, fixed_frame, timeout);
@@ -67,24 +67,24 @@ Buffer::lookupTransform(const std::string& target_frame, const ros::Time& target
 }
 
 /** This is a workaround for the case that we're running inside of
-    rospy and ros::Time is not initialized inside the c++ instance. 
+    rospy and builtin_interfaces::msg::Time is not initialized inside the c++ instance. 
     This makes the system fall back to Wall time if not initialized.  
 */
-ros::Time now_fallback_to_wall()
+builtin_interfaces::msg::Time now_fallback_to_wall()
 {
   try
   {
-    return ros::Time::now();
+    return builtin_interfaces::msg::Time::now();
   }
-  catch (ros::TimeNotInitializedException ex)
+  catch (builtin_interfaces::msg::TimeNotInitializedException ex)
   {
     ros::WallTime wt = ros::WallTime::now(); 
-    return ros::Time(wt.sec, wt.nsec); 
+    return builtin_interfaces::msg::Time(wt.sec, wt.nsec); 
   }
 }
 
 /** This is a workaround for the case that we're running inside of
-    rospy and ros::Time is not initialized inside the c++ instance. 
+    rospy and builtin_interfaces::msg::Time is not initialized inside the c++ instance. 
     This makes the system fall back to Wall time if not initialized.  
     https://github.com/ros/geometry/issues/30
 */
@@ -94,14 +94,14 @@ void sleep_fallback_to_wall(const ros::Duration& d)
   {
       d.sleep();
   }
-  catch (ros::TimeNotInitializedException ex)
+  catch (builtin_interfaces::msg::TimeNotInitializedException ex)
   {
     ros::WallDuration wd = ros::WallDuration(d.sec, d.nsec); 
     wd.sleep();
   }
 }
 
-void conditionally_append_timeout_info(std::string * errstr, const ros::Time& start_time,
+void conditionally_append_timeout_info(std::string * errstr, const builtin_interfaces::msg::Time& start_time,
                                        const ros::Duration& timeout)
 {
   if (errstr)
@@ -115,13 +115,13 @@ void conditionally_append_timeout_info(std::string * errstr, const ros::Time& st
 
 bool
 Buffer::canTransform(const std::string& target_frame, const std::string& source_frame, 
-                     const ros::Time& time, const ros::Duration timeout, std::string* errstr) const
+                     const builtin_interfaces::msg::Time& time, const ros::Duration timeout, std::string* errstr) const
 {
   if (!checkAndErrorDedicatedThreadPresent(errstr))
     return false;
 
   // poll for transform if timeout is set
-  ros::Time start_time = now_fallback_to_wall();
+  builtin_interfaces::msg::Time start_time = now_fallback_to_wall();
   while (now_fallback_to_wall() < start_time + timeout && 
          !canTransform(target_frame, source_frame, time) &&
          (now_fallback_to_wall()+ros::Duration(3.0) >= start_time) &&  //don't wait when we detect a bag loop
@@ -136,15 +136,15 @@ Buffer::canTransform(const std::string& target_frame, const std::string& source_
 
     
 bool
-Buffer::canTransform(const std::string& target_frame, const ros::Time& target_time,
-                     const std::string& source_frame, const ros::Time& source_time,
+Buffer::canTransform(const std::string& target_frame, const builtin_interfaces::msg::Time& target_time,
+                     const std::string& source_frame, const builtin_interfaces::msg::Time& source_time,
                      const std::string& fixed_frame, const ros::Duration timeout, std::string* errstr) const
 {
   if (!checkAndErrorDedicatedThreadPresent(errstr))
     return false;
 
   // poll for transform if timeout is set
-  ros::Time start_time = now_fallback_to_wall();
+  builtin_interfaces::msg::Time start_time = now_fallback_to_wall();
   while (now_fallback_to_wall() < start_time + timeout && 
          !canTransform(target_frame, target_time, source_frame, source_time, fixed_frame) &&
          (now_fallback_to_wall()+ros::Duration(3.0) >= start_time) &&  //don't wait when we detect a bag loop

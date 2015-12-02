@@ -54,7 +54,7 @@ TEST(Tf2Sensor, PointCloud2)
   *iter_y = 2;
   *iter_z = 3;
 
-  cloud.header.stamp = ros::Time(2);
+  cloud.header.stamp = builtin_interfaces::msg::Time(2);
   cloud.header.frame_id = "A";
 
   // simple api
@@ -67,7 +67,7 @@ TEST(Tf2Sensor, PointCloud2)
   EXPECT_NEAR(*iter_z_after, 27, EPS);
 
   // advanced api
-  sensor_msgs::PointCloud2 cloud_advanced = tf_buffer->transform(cloud, "B", ros::Time(2.0),
+  sensor_msgs::PointCloud2 cloud_advanced = tf_buffer->transform(cloud, "B", builtin_interfaces::msg::Time(2.0),
                                                                  "A", ros::Duration(3.0));
   sensor_msgs::PointCloud2Iterator<float> iter_x_advanced(cloud_advanced, "x");
   sensor_msgs::PointCloud2Iterator<float> iter_y_advanced(cloud_advanced, "y");
@@ -93,7 +93,7 @@ int main(int argc, char **argv){
   t.transform.rotation.y = 0;
   t.transform.rotation.z = 0;
   t.transform.rotation.w = 0;
-  t.header.stamp = ros::Time(2.0);
+  t.header.stamp = builtin_interfaces::msg::Time(2.0);
   t.header.frame_id = "A";
   t.child_frame_id = "B";
   tf_buffer->setTransform(t, "test");

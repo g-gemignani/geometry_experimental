@@ -46,7 +46,7 @@ namespace tf2_ros
   }
 
   geometry_msgs::TransformStamped BufferClient::lookupTransform(const std::string& target_frame, const std::string& source_frame,
-      const ros::Time& time, const ros::Duration timeout) const
+      const builtin_interfaces::msg::Time& time, const ros::Duration timeout) const
   {
     //populate the goal message
     tf2_msgs::LookupTransformGoal goal;
@@ -59,8 +59,8 @@ namespace tf2_ros
     return processGoal(goal);
   }
 
-  geometry_msgs::TransformStamped BufferClient::lookupTransform(const std::string& target_frame, const ros::Time& target_time,
-      const std::string& source_frame, const ros::Time& source_time,
+  geometry_msgs::TransformStamped BufferClient::lookupTransform(const std::string& target_frame, const builtin_interfaces::msg::Time& target_time,
+      const std::string& source_frame, const builtin_interfaces::msg::Time& source_time,
       const std::string& fixed_frame, const ros::Duration timeout) const
   {
     //populate the goal message
@@ -81,10 +81,10 @@ namespace tf2_ros
     client_.sendGoal(goal);
     ros::Rate r(check_frequency_);
     bool timed_out = false;
-    ros::Time start_time = ros::Time::now();
+    builtin_interfaces::msg::Time start_time = builtin_interfaces::msg::Time::now();
     while(ros::ok() && !client_.getState().isDone() && !timed_out)
     {
-      timed_out = ros::Time::now() > start_time + goal.timeout + timeout_padding_;
+      timed_out = builtin_interfaces::msg::Time::now() > start_time + goal.timeout + timeout_padding_;
       r.sleep();
     }
 
@@ -130,7 +130,7 @@ namespace tf2_ros
   }
 
   bool BufferClient::canTransform(const std::string& target_frame, const std::string& source_frame, 
-        const ros::Time& time, const ros::Duration timeout, std::string* errstr) const
+        const builtin_interfaces::msg::Time& time, const ros::Duration timeout, std::string* errstr) const
   {
     try
     {
@@ -145,8 +145,8 @@ namespace tf2_ros
     }
   }
 
-  bool BufferClient::canTransform(const std::string& target_frame, const ros::Time& target_time,
-        const std::string& source_frame, const ros::Time& source_time,
+  bool BufferClient::canTransform(const std::string& target_frame, const builtin_interfaces::msg::Time& target_time,
+        const std::string& source_frame, const builtin_interfaces::msg::Time& source_time,
         const std::string& fixed_frame, const ros::Duration timeout, std::string* errstr) const
   {
     try

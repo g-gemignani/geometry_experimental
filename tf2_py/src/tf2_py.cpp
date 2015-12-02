@@ -130,7 +130,7 @@ static PyObject *transform_converter(const geometry_msgs::TransformStamped* tran
   return pinst;
 }
 
-static int rostime_converter(PyObject *obj, ros::Time *rt)
+static int rostime_converter(PyObject *obj, builtin_interfaces::msg::Time *rt)
 {
   PyObject *tsr = PyObject_CallMethod(obj, (char*)"to_sec", NULL);
   if (tsr == NULL) {
@@ -196,7 +196,7 @@ static PyObject *canTransformCore(PyObject *self, PyObject *args, PyObject *kw)
 {
   tf2::BufferCore *bc = ((buffer_core_t*)self)->bc;
   char *target_frame, *source_frame;
-  ros::Time time;
+  builtin_interfaces::msg::Time time;
   static const char *keywords[] = { "target_frame", "source_frame", "time", NULL };
 
   if (!PyArg_ParseTupleAndKeywords(args, kw, "ssO&", (char**)keywords, &target_frame, &source_frame, rostime_converter, &time))
@@ -211,7 +211,7 @@ static PyObject *canTransformFullCore(PyObject *self, PyObject *args, PyObject *
 {
   tf2::BufferCore *bc = ((buffer_core_t*)self)->bc;
   char *target_frame, *source_frame, *fixed_frame;
-  ros::Time target_time, source_time;
+  builtin_interfaces::msg::Time target_time, source_time;
   static const char *keywords[] = { "target_frame", "target_time", "source_frame", "source_time", "fixed_frame", NULL };
 
   if (!PyArg_ParseTupleAndKeywords(args, kw, "sO&sO&s", (char**)keywords,
@@ -244,7 +244,7 @@ static PyObject *chain(PyObject *self, PyObject *args, PyObject *kw)
 {
   tf::Transformer *t = ((transformer_t*)self)->t;
   char *target_frame, *source_frame, *fixed_frame;
-  ros::Time target_time, source_time;
+  builtin_interfaces::msg::Time target_time, source_time;
   std::vector< std::string > output;
   static const char *keywords[] = { "target_frame", "target_time", "source_frame", "source_time", "fixed_frame", NULL };
 
@@ -267,7 +267,7 @@ static PyObject *getLatestCommonTime(PyObject *self, PyObject *args, PyObject *k
   tf::Transformer *t = ((transformer_t*)self)->t;
   char *source, *dest;
   std::string error_string;
-  ros::Time time;
+  builtin_interfaces::msg::Time time;
 
   if (!PyArg_ParseTuple(args, "ss", &source, &dest))
     return NULL;
@@ -290,7 +290,7 @@ static PyObject *lookupTransformCore(PyObject *self, PyObject *args, PyObject *k
 {
   tf2::BufferCore *bc = ((buffer_core_t*)self)->bc;
   char *target_frame, *source_frame;
-  ros::Time time;
+  builtin_interfaces::msg::Time time;
   static const char *keywords[] = { "target_frame", "source_frame", "time", NULL };
 
   if (!PyArg_ParseTupleAndKeywords(args, kw, "ssO&", (char**)keywords, &target_frame, &source_frame, rostime_converter, &time))
@@ -310,7 +310,7 @@ static PyObject *lookupTransformFullCore(PyObject *self, PyObject *args, PyObjec
 {
   tf2::BufferCore *bc = ((buffer_core_t*)self)->bc;
   char *target_frame, *source_frame, *fixed_frame;
-  ros::Time target_time, source_time;
+  builtin_interfaces::msg::Time target_time, source_time;
   static const char *keywords[] = { "target_frame", "target_time", "source_frame", "source_time", "fixed_frame", NULL };
 
   if (!PyArg_ParseTupleAndKeywords(args, kw, "sO&sO&s", (char**)keywords,
@@ -334,7 +334,7 @@ static PyObject *lookupTwistCore(PyObject *self, PyObject *args, PyObject *kw)
 {
   tf2::BufferCore *bc = ((buffer_core_t*)self)->bc;
   char *tracking_frame, *observation_frame;
-  ros::Time time;
+  builtin_interfaces::msg::Time time;
   ros::Duration averaging_interval;
   static const char *keywords[] = { "tracking_frame", "observation_frame", "time", "averaging_interval", NULL };
 
@@ -352,7 +352,7 @@ static PyObject *lookupTwistFullCore(PyObject *self, PyObject *args)
 {
   tf2::BufferCore *bc = ((buffer_core_t*)self)->bc;
   char *tracking_frame, *observation_frame, *reference_frame, *reference_point_frame;
-  ros::Time time;
+  builtin_interfaces::msg::Time time;
   ros::Duration averaging_interval;
   double px, py, pz;
 

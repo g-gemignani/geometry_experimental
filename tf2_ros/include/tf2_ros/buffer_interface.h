@@ -60,7 +60,7 @@ public:
    */
   virtual geometry_msgs::TransformStamped
     lookupTransform(const std::string& target_frame, const std::string& source_frame, 
-		    const ros::Time& time, const ros::Duration timeout) const = 0;
+		    const builtin_interfaces::msg::Time& time, const ros::Duration timeout) const = 0;
 
   /** \brief Get the transform between two frames by frame ID assuming fixed frame.
    * \param target_frame The frame to which data should be transformed
@@ -75,8 +75,8 @@ public:
    * tf2::ExtrapolationException, tf2::InvalidArgumentException
    */
   virtual geometry_msgs::TransformStamped 
-    lookupTransform(const std::string& target_frame, const ros::Time& target_time,
-		    const std::string& source_frame, const ros::Time& source_time,
+    lookupTransform(const std::string& target_frame, const builtin_interfaces::msg::Time& target_time,
+		    const std::string& source_frame, const builtin_interfaces::msg::Time& source_time,
 		    const std::string& fixed_frame, const ros::Duration timeout) const = 0;
 
 
@@ -90,7 +90,7 @@ public:
    */
   virtual bool
     canTransform(const std::string& target_frame, const std::string& source_frame, 
-		 const ros::Time& time, const ros::Duration timeout, std::string* errstr = NULL) const = 0;
+		 const builtin_interfaces::msg::Time& time, const ros::Duration timeout, std::string* errstr = NULL) const = 0;
 
   /** \brief Test if a transform is possible
    * \param target_frame The frame into which to transform
@@ -103,8 +103,8 @@ public:
    * \return True if the transform is possible, false otherwise 
    */
   virtual bool
-    canTransform(const std::string& target_frame, const ros::Time& target_time,
-		 const std::string& source_frame, const ros::Time& source_time,
+    canTransform(const std::string& target_frame, const builtin_interfaces::msg::Time& target_time,
+		 const std::string& source_frame, const builtin_interfaces::msg::Time& source_time,
 		 const std::string& fixed_frame, const ros::Duration timeout, std::string* errstr = NULL) const = 0;
 
   // Transform, simple api, with pre-allocation
@@ -140,7 +140,7 @@ public:
   // Transform, advanced api, with pre-allocation
   template <class T>
     T& transform(const T& in, T& out, 
-		 const std::string& target_frame, const ros::Time& target_time,
+		 const std::string& target_frame, const builtin_interfaces::msg::Time& target_time,
 		 const std::string& fixed_frame, ros::Duration timeout=ros::Duration(0.0)) const
   {
     // do the transform
@@ -154,7 +154,7 @@ public:
   // transform, advanced api, no pre-allocation
   template <class T>
     T transform(const T& in, 
-		 const std::string& target_frame, const ros::Time& target_time,
+		 const std::string& target_frame, const builtin_interfaces::msg::Time& target_time,
 		 const std::string& fixed_frame, ros::Duration timeout=ros::Duration(0.0)) const
   {
     T out;
@@ -164,7 +164,7 @@ public:
   // Transform, advanced api, different types, with pre-allocation
   template <class A, class B>
     B& transform(const A& in, B& out, 
-		 const std::string& target_frame, const ros::Time& target_time,
+		 const std::string& target_frame, const builtin_interfaces::msg::Time& target_time,
 		 const std::string& fixed_frame, ros::Duration timeout=ros::Duration(0.0)) const
   {
     // do the transform

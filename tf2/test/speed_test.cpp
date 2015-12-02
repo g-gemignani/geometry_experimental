@@ -43,13 +43,13 @@ int main(int argc, char** argv)
 
   tf2::BufferCore bc;
   geometry_msgs::TransformStamped t;
-  t.header.stamp = ros::Time(1);
+  t.header.stamp = builtin_interfaces::msg::Time(1);
   t.header.frame_id = "root";
   t.child_frame_id = "0";
   t.transform.translation.x = 1;
   t.transform.rotation.w = 1.0;
   bc.setTransform(t, "me");
-  t.header.stamp = ros::Time(2);
+  t.header.stamp = builtin_interfaces::msg::Time(2);
   bc.setTransform(t, "me");
 
   for (uint32_t i = 1; i < num_levels/2; ++i)
@@ -61,7 +61,7 @@ int main(int argc, char** argv)
       std::stringstream child_ss;
       child_ss << i;
 
-      t.header.stamp = ros::Time(j);
+      t.header.stamp = builtin_interfaces::msg::Time(j);
       t.header.frame_id = parent_ss.str();
       t.child_frame_id = child_ss.str();
       bc.setTransform(t, "me");
@@ -71,10 +71,10 @@ int main(int argc, char** argv)
   t.header.frame_id = "root";
   std::stringstream ss;
   ss << num_levels/2;
-  t.header.stamp = ros::Time(1);
+  t.header.stamp = builtin_interfaces::msg::Time(1);
   t.child_frame_id = ss.str();
   bc.setTransform(t, "me");
-  t.header.stamp = ros::Time(2);
+  t.header.stamp = builtin_interfaces::msg::Time(2);
   bc.setTransform(t, "me");
 
   for (uint32_t i = num_levels/2 + 1; i < num_levels; ++i)
@@ -86,7 +86,7 @@ int main(int argc, char** argv)
       std::stringstream child_ss;
       child_ss << i;
 
-      t.header.stamp = ros::Time(j);
+      t.header.stamp = builtin_interfaces::msg::Time(j);
       t.header.frame_id = parent_ss.str();
       t.child_frame_id = child_ss.str();
       bc.setTransform(t, "me");

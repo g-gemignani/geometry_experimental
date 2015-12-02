@@ -50,7 +50,7 @@ namespace tf2_ros
     check_timer_ = n.createTimer(check_period, boost::bind(&BufferServer::checkTransforms, this, _1));
   }
 
-  void BufferServer::checkTransforms(const ros::TimerEvent& e)
+  void BufferServer::checkTransforms(const builtin_interfaces::msg::TimerEvent& e)
   {
     boost::mutex::scoped_lock l(mutex_);
     for(std::list<GoalInfo>::iterator it = active_goals_.begin(); it != active_goals_.end();)
@@ -59,7 +59,7 @@ namespace tf2_ros
 
       //we want to lookup a transform if the time on the goal
       //has expired, or a transform is available
-      if(canTransform(info.handle) || info.end_time < ros::Time::now())
+      if(canTransform(info.handle) || info.end_time < builtin_interfaces::msg::Time::now())
       {
         tf2_msgs::LookupTransformResult result;
 
@@ -139,11 +139,11 @@ namespace tf2_ros
     //along with the time that the goal will end
     GoalInfo goal_info;
     goal_info.handle = gh;
-    goal_info.end_time = ros::Time::now() + gh.getGoal()->timeout;
+    goal_info.end_time = builtin_interfaces::msg::Time::now() + gh.getGoal()->timeout;
 
     //we can do a quick check here to see if the transform is valid
     //we'll also do this if the end time has been reached 
-    if(canTransform(gh) || goal_info.end_time <= ros::Time::now())
+    if(canTransform(gh) || goal_info.end_time <= builtin_interfaces::msg::Time::now())
     {
       tf2_msgs::LookupTransformResult result;
       try

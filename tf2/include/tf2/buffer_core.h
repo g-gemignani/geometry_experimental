@@ -32,7 +32,7 @@
 #ifndef TF2_BUFFER_CORE_H
 #define TF2_BUFFER_CORE_H
 
-#include "convert.h"
+// COmmented out to avoid converting #include "convert.h"
 #include "LinearMath/Transform.h"
 #include "transform_storage.h"
 
@@ -219,7 +219,7 @@ public:
   geometry_msgs::Twist
     lookupTwist(const std::string& tracking_frame, const std::string& observation_frame, const std::string& reference_frame,
 		const tf::Point & reference_point, const std::string& reference_point_frame, 
-		const ros::Time& time, const ros::Duration& averaging_interval) const;
+		const builtin_interfaces::msg::Time& time, const ros::Duration& averaging_interval) const;
   */
   /** \brief lookup the twist of the tracking frame with respect to the observational frame 
    * 
@@ -236,7 +236,7 @@ public:
   /*
   geometry_msgs::Twist
     lookupTwist(const std::string& tracking_frame, const std::string& observation_frame, 
-		const ros::Time& time, const ros::Duration& averaging_interval) const;
+		const builtin_interfaces::msg::Time& time, const ros::Duration& averaging_interval) const;
   */
   /** \brief Test if a transform is possible
    * \param target_frame The frame into which to transform

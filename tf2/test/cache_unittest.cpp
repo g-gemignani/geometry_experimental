@@ -144,16 +144,16 @@ TEST(TimeCache, RepeatabilityRandomInsertOrder)
     ss << values[i];
     stor.header.frame_id = ss.str();
     stor.frame_id_ = i;
-    stor.stamp_ = ros::Time().fromNSec(i);
+    stor.stamp_ = builtin_interfaces::msg::Time().fromNSec(i);
     
     cache.insertData(stor);
   }
   for ( uint64_t i = 1; i < runs ; i++ )
 
   {
-    cache.getData(ros::Time().fromNSec(i), stor);
+    cache.getData(builtin_interfaces::msg::Time().fromNSec(i), stor);
     EXPECT_EQ(stor.frame_id_, i);
-    EXPECT_EQ(stor.stamp_, ros::Time().fromNSec(i));
+    EXPECT_EQ(stor.stamp_, builtin_interfaces::msg::Time().fromNSec(i));
     std::stringstream ss;
     ss << values[i];
     EXPECT_EQ(stor.header.frame_id, ss.str());

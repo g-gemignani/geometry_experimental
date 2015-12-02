@@ -52,7 +52,7 @@ TEST(tf2_ros, buffer_client)
 
   geometry_msgs::PointStamped p1;
   p1.header.frame_id = "a";
-  p1.header.stamp = ros::Time();
+  p1.header.stamp = builtin_interfaces::msg::Time();
   p1.point.x = 0.0;
   p1.point.y = 0.0;
   p1.point.z = 0.0;
@@ -81,7 +81,7 @@ TEST(tf2_ros, buffer_client_different_types)
   //make sure that things are set up
   ASSERT_TRUE(client.waitForServer(ros::Duration(4.0)));
 
-  tf2::Stamped<KDL::Vector> k1(KDL::Vector(0, 0, 0), ros::Time(), "a");
+  tf2::Stamped<KDL::Vector> k1(KDL::Vector(0, 0, 0), builtin_interfaces::msg::Time(), "a");
 
   try
   {

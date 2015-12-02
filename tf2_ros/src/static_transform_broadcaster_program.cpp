@@ -54,7 +54,7 @@ int main(int argc, char ** argv)
     msg.transform.rotation.y = atof(argv[5]);
     msg.transform.rotation.z = atof(argv[6]);
     msg.transform.rotation.w = atof(argv[7]);
-    msg.header.stamp = ros::Time::now();
+    msg.header.stamp = builtin_interfaces::msg::Time::now();
     msg.header.frame_id = argv[8];
     msg.child_frame_id = argv[9];
   
@@ -86,7 +86,7 @@ int main(int argc, char ** argv)
     msg.transform.rotation.z = quat.z();
     msg.transform.rotation.w = quat.w();
 
-    msg.header.stamp = ros::Time::now();
+    msg.header.stamp = builtin_interfaces::msg::Time::now();
     msg.header.frame_id = argv[7];
     msg.child_frame_id = argv[8];
 
