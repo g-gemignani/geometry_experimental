@@ -3,49 +3,50 @@ project(tf2)
 
 add_definitions(-std=gnu++11)
 
+find_package(ament_cmake)
 find_package(console_bridge REQUIRED)
-find_package(catkin REQUIRED COMPONENTS geometry_msgs)
+find_package(geometry_msgs REQUIRED)
 find_package(Boost REQUIRED COMPONENTS signals system thread)
 
-catkin_package(
-   INCLUDE_DIRS include
-   LIBRARIES tf2
-   DEPENDS console_bridge
-   CATKIN_DEPENDS geometry_msgs)
-
-include_directories(include ${catkin_INCLUDE_DIRS} ${console_bridge_INCLUDE_DIRS})
-include_directories (src/bt)
+message(WARNING "geometry_msgs_INCLUDE_DIRS is: [[${geometry_msgs_INCLUDE_DIRS}]]")
+include_directories(include src/bt ${geometry_msgs_INCLUDE_DIRS} ${console_bridge_INCLUDE_DIRS})
 
 # export user definitions
 
 #CPP Libraries
 add_library(tf2 src/cache.cpp src/buffer_core.cpp src/static_cache.cpp)
-target_link_libraries(tf2 ${Boost_LIBRARIES} ${catkin_LIBRARIES} ${console_bridge_LIBRARIES})
+target_link_libraries(tf2 ${Boost_LIBRARIES} ${geometry_msgs_LIBRARIES} ${console_bridge_LIBRARIES})
 
 install(TARGETS tf2
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
 install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  DESTINATION include/${PROJECT_NAME}
 )
 
 # Tests
-if(CATKIN_ENABLE_TESTING)
-
-catkin_add_gtest(test_cache_unittest test/cache_unittest.cpp)
+if(AMENT_ENABLE_TESTING)
+find_package(ament_lint_auto REQUIRED)
+ament_lint_auto_find_test_dependencies()
+   
+ament_add_gtest(test_cache_unittest test/cache_unittest.cpp)
 target_link_libraries(test_cache_unittest tf2  ${console_bridge_LIBRARIES})
 
-catkin_add_gtest(test_static_cache_unittest test/static_cache_test.cpp)
+ament_add_gtest(test_static_cache_unittest test/static_cache_test.cpp)
 target_link_libraries(test_static_cache_unittest tf2  ${console_bridge_LIBRARIES})
 
-catkin_add_gtest(test_simple test/simple_tf2_core.cpp)
+ament_add_gtest(test_simple test/simple_tf2_core.cpp)
 target_link_libraries(test_simple tf2  ${console_bridge_LIBRARIES})
 
 add_executable(speed_test EXCLUDE_FROM_ALL test/speed_test.cpp)
 target_link_libraries(speed_test tf2  ${console_bridge_LIBRARIES})
-add_dependencies(tests speed_test)
+# add_dependencies(tests speed_test)
 
 endif()
+
+ament_export_include_directories(include)
+ament_export_libraries(tf2)
+ament_package()
