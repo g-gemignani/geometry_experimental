@@ -27,15 +27,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <gtest/gtest.h>
-#include <tf2/time_cache.h>
-#include <sys/time.h>
-#include "tf2/LinearMath/Quaternion.h"
-#include <stdexcept>
-
-#include <geometry_msgs/msg/transform_stamped.h>
-
 #include <cmath>
+#include <gtest/gtest.h>
+#include <stdexcept>
+#include <sys/time.h>
+
+#include "tf2/time_cache.h"
+#include "tf2/LinearMath/Quaternion.h"
 
 std::vector<double> values;
 unsigned int step = 0;
@@ -123,44 +121,6 @@ TEST(TimeCache, RepeatabilityReverseInsertOrder)
   }
   
 }
-
-#if 0    // jfaust: this doesn't seem to actually be testing random insertion?
-TEST(TimeCache, RepeatabilityRandomInsertOrder)
-{
-
-  seed_rand();
-  
-  tf2::TimeCache  cache;
-  double my_vals[] = {13,2,5,4,9,7,3,11,15,14,12,1,6,10,0,8};
-  std::vector<double> values (my_vals, my_vals + sizeof(my_vals)/sizeof(double)); 
-  unsigned int runs = values.size();
-
-  TransformStorage stor;
-  setIdentity(stor);
-  for ( uint64_t i = 0; i <runs ; i++ )
-  {
-    values[i] = 10.0 * get_rand();
-    std::stringstream ss;
-    ss << values[i];
-    stor.header.frame_id = ss.str();
-    stor.frame_id_ = i;
-    stor.stamp_ = builtin_interfaces::msg::Time().fromNSec(i);
-    
-    cache.insertData(stor);
-  }
-  for ( uint64_t i = 1; i < runs ; i++ )
-
-  {
-    cache.getData(builtin_interfaces::msg::Time().fromNSec(i), stor);
-    EXPECT_EQ(stor.frame_id_, i);
-    EXPECT_EQ(stor.stamp_, builtin_interfaces::msg::Time().fromNSec(i));
-    std::stringstream ss;
-    ss << values[i];
-    EXPECT_EQ(stor.header.frame_id, ss.str());
-  }
-  
-}
-#endif
 
 TEST(TimeCache, ZeroAtFront)
 {

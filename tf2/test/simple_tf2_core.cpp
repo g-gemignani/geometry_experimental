@@ -71,7 +71,11 @@ TEST(tf2, setTransformValid)
   st.header.frame_id = "foo";
   st.header.stamp = builtin_interfaces::msg::Time();
   st.header.stamp.sec = 1;
+  st.header.stamp.nanosec = 1;
   st.child_frame_id = "child";
+  st.transform.rotation.x = 0;
+  st.transform.rotation.y = 0;
+  st.transform.rotation.z = 0;
   st.transform.rotation.w = 1;
   EXPECT_TRUE(tfc.setTransform(st, "authority1"));
   
@@ -98,7 +102,11 @@ TEST(tf2_lookupTransform, LookupException_One_Exists)
   st.header.frame_id = "foo";
   st.header.stamp = builtin_interfaces::msg::Time();
   st.header.stamp.sec = 1;
+  st.header.stamp.nanosec = 0;
   st.child_frame_id = "child";
+  st.transform.rotation.x = 0;
+  st.transform.rotation.y = 0;
+  st.transform.rotation.z = 0;
   st.transform.rotation.w = 1;
   EXPECT_TRUE(tfc.setTransform(st, "authority1"));
   EXPECT_THROW(tfc.lookupTransform("foo", "bar", TimePoint(std::chrono::seconds(1))), tf2::LookupException);
@@ -112,7 +120,11 @@ TEST(tf2_canTransform, One_Exists)
   st.header.frame_id = "foo";
   st.header.stamp = builtin_interfaces::msg::Time();
   st.header.stamp.sec = 1;
+  st.header.stamp.nanosec = 0;
   st.child_frame_id = "child";
+  st.transform.rotation.x = 0;
+  st.transform.rotation.y = 0;
+  st.transform.rotation.z = 0;
   st.transform.rotation.w = 1;
   EXPECT_TRUE(tfc.setTransform(st, "authority1"));
   EXPECT_FALSE(tfc.canTransform("foo", "bar", TimePoint(std::chrono::seconds(1))));

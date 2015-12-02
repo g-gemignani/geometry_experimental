@@ -32,7 +32,6 @@
 #ifndef TF2_BUFFER_CORE_H
 #define TF2_BUFFER_CORE_H
 
-// COmmented out to avoid converting #include "convert.h"
 #include "LinearMath/Transform.h"
 #include "transform_storage.h"
 

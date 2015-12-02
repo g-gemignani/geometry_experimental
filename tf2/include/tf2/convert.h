@@ -34,6 +34,8 @@
 
 #include <builtin_interfaces/msg/time.hpp>
 
+// TODO(tfoote) 
+#error This has not been converted to ROS2 and will not compile
 
 #include <tf2/transform_datatypes.h>
 #include <tf2/exceptions.h>
