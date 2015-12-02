@@ -35,7 +35,7 @@
 
 #include <tf2/transform_datatypes.h>
 #include <tf2/exceptions.h>
-#include <geometry_msgs/TransformStamped.h>
+#include <geometry_msgs/msg/transform_stamped.hpp>
 #include <tf2/impl/convert.h>
 
 namespace tf2 {

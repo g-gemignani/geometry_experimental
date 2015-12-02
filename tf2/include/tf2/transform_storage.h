@@ -35,17 +35,9 @@
 #include <tf2/LinearMath/Vector3.h>
 #include <tf2/LinearMath/Quaternion.h>
 
-#include <ros/message_forward.h>
-#include <ros/types.h>
-
 #include <chrono>
 #include <iomanip>
 #include <ctime>
-
-namespace geometry_msgs
-{
-ROS_DECLARE_MESSAGE(TransformStamped);
-}
 
 namespace tf2
 {
@@ -106,4 +98,3 @@ public:
 }
 
 #endif // TF2_TRANSFORM_STORAGE_H
-

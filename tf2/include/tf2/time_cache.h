@@ -34,18 +34,9 @@
 
 #include "transform_storage.h"
 
-#include <list>
-
-#include <sstream>
-
-#include <ros/message_forward.h>
-
 #include <boost/shared_ptr.hpp>
-
-namespace geometry_msgs
-{
-ROS_DECLARE_MESSAGE(TransformStamped);
-}
+#include <list>
+#include <sstream>
 
 namespace tf2
 {
