@@ -32,6 +32,8 @@
 #ifndef TF2_CONVERT_H
 #define TF2_CONVERT_H
 
+#include <builtin_interfaces/msg/time.hpp>
+
 
 #include <tf2/transform_datatypes.h>
 #include <tf2/exceptions.h>
@@ -50,7 +52,7 @@ namespace tf2 {
  * This method needs to be implemented by client library developers
  */
 template <class T>
-  void doTransform(const T& data_in, T& data_out, const geometry_msgs::TransformStamped& transform);
+  void doTransform(const T& data_in, T& data_out, const geometry_msgs::msg::TransformStamped& transform);
 
 /**\brief Get the timestamp from data 
  * \param t The data input.

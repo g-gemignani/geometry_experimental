@@ -33,7 +33,7 @@
 #include "tf2/LinearMath/Quaternion.h"
 #include <stdexcept>
 
-#include <geometry_msgs/TransformStamped.h>
+#include <geometry_msgs/msg/transform_stamped.h>
 
 #include <cmath>
 

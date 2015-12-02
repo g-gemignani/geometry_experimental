@@ -43,13 +43,12 @@
 //#include "geometry_msgs/TwistStamped.h"
 #include "geometry_msgs/msg/transform_stamped.hpp"
 
-//////////////////////////backwards startup for porting
-//#include "tf/tf.h"
-
 #include <boost/unordered_map.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>
+
+#include <tf2/exceptions.h>
 
 namespace tf2
 {
@@ -109,7 +108,7 @@ public:
    * \param is_static Record this transform as a static transform.  It will be good across all time.  (This cannot be changed after the first call.)
    * \return True unless an error occured
    */
-  bool setTransform(const geometry_msgs::TransformStamped& transform, const std::string & authority, bool is_static = false)
+  bool setTransform(const geometry_msgs::msg::TransformStamped& transform, const std::string & authority, bool is_static = false)
   {
     tf2::Transform tf2_transform(tf2::Quaternion(transform.transform.rotation.w,
                                                  transform.transform.rotation.x,
@@ -121,7 +120,7 @@ public:
 
     return setTransformImpl(tf2_transform, transform.header.frame_id, transform.child_frame_id,
                             TimePoint(std::chrono::seconds(transform.header.stamp.sec) +
-                                      std::chrono::nanoseconds(transform.header.stamp.nsec)), authority, is_static);
+                                      std::chrono::nanoseconds(transform.header.stamp.nanosec)), authority, is_static);
   }
 
   /*********** Accessors *************/
@@ -135,14 +134,14 @@ public:
    * Possible exceptions tf2::LookupException, tf2::ConnectivityException,
    * tf2::ExtrapolationException, tf2::InvalidArgumentException
    */
-  geometry_msgs::TransformStamped 
+  geometry_msgs::msg::TransformStamped 
     lookupTransform(const std::string& target_frame, const std::string& source_frame,
 		    const TimePoint& time) const
   {
     tf2::Transform transform;
     TimePoint time_out;
     lookupTransformImpl(target_frame, source_frame, time, transform, time_out);
-    geometry_msgs::TransformStamped msg;
+    geometry_msgs::msg::TransformStamped msg;
     msg.transform.translation.x = transform.getOrigin().x();
     msg.transform.translation.y = transform.getOrigin().y();
     msg.transform.translation.z = transform.getOrigin().z();
@@ -152,7 +151,7 @@ public:
     msg.transform.rotation.w = transform.getRotation().w();
     std::chrono::time_point_cast<std::chrono::seconds>(time_out);
     msg.header.stamp.sec = std::chrono::time_point_cast<std::chrono::seconds>(time_out).time_since_epoch().count();
-    msg.header.stamp.nsec = std::chrono::time_point_cast<std::chrono::nanoseconds>(time_out).time_since_epoch().count() - msg.header.stamp.sec;
+    msg.header.stamp.nanosec = std::chrono::time_point_cast<std::chrono::nanoseconds>(time_out).time_since_epoch().count() - msg.header.stamp.sec;
     msg.header.frame_id = target_frame;
     msg.child_frame_id = source_frame;
 
@@ -171,7 +170,7 @@ public:
    * tf2::ExtrapolationException, tf2::InvalidArgumentException
    */
 
-  geometry_msgs::TransformStamped
+  geometry_msgs::msg::TransformStamped
     lookupTransform(const std::string& target_frame, const TimePoint& target_time,
 		    const std::string& source_frame, const TimePoint& source_time,
 		    const std::string& fixed_frame) const
@@ -180,7 +179,7 @@ public:
     TimePoint time_out;
     lookupTransformImpl(target_frame, target_time, source_frame, source_time,
                         fixed_frame, transform, time_out);
-    geometry_msgs::TransformStamped msg;
+    geometry_msgs::msg::TransformStamped msg;
     msg.transform.translation.x = transform.getOrigin().x();
     msg.transform.translation.y = transform.getOrigin().y();
     msg.transform.translation.z = transform.getOrigin().z();
@@ -189,7 +188,7 @@ public:
     msg.transform.rotation.z = transform.getRotation().z();
     msg.transform.rotation.w = transform.getRotation().w();
     msg.header.stamp.sec = std::chrono::time_point_cast<std::chrono::seconds>(time_out).time_since_epoch().count();
-    msg.header.stamp.nsec = std::chrono::time_point_cast<std::chrono::nanoseconds>(time_out).time_since_epoch().count() - msg.header.stamp.sec;
+    msg.header.stamp.nanosec = std::chrono::time_point_cast<std::chrono::nanoseconds>(time_out).time_since_epoch().count() - msg.header.stamp.sec;
     msg.header.frame_id = target_frame;
     msg.child_frame_id = source_frame;
 

@@ -32,7 +32,7 @@
 #include <sys/time.h>
 #include <stdexcept>
 
-#include <geometry_msgs/TransformStamped.h>
+#include <geometry_msgs/msg/transform_stamped.h>
 
 #include <cmath>
 

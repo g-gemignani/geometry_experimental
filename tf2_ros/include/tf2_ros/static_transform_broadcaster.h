@@ -36,7 +36,7 @@
 
 
 #include "ros/ros.h"
-#include "geometry_msgs/TransformStamped.h"
+#include "geometry_msgs/msg/transform_stamped.h"
 #include "tf2_msgs/TFMessage.h"
 
 namespace tf2_ros
