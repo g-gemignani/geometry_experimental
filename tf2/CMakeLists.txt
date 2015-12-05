@@ -6,7 +6,6 @@ add_definitions(-std=gnu++11)
 find_package(ament_cmake)
 find_package(console_bridge REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(Boost REQUIRED COMPONENTS signals system thread)
 
 message(WARNING "geometry_msgs_INCLUDE_DIRS is: [[${geometry_msgs_INCLUDE_DIRS}]]")
 include_directories(include src/bt ${geometry_msgs_INCLUDE_DIRS} ${console_bridge_INCLUDE_DIRS})
@@ -15,7 +14,7 @@ include_directories(include src/bt ${geometry_msgs_INCLUDE_DIRS} ${console_bridg
 
 #CPP Libraries
 add_library(tf2 src/cache.cpp src/buffer_core.cpp src/static_cache.cpp)
-target_link_libraries(tf2 ${Boost_LIBRARIES} ${geometry_msgs_LIBRARIES} ${console_bridge_LIBRARIES})
+target_link_libraries(tf2 ${geometry_msgs_LIBRARIES} ${console_bridge_LIBRARIES})
 
 install(TARGETS tf2
   ARCHIVE DESTINATION lib
