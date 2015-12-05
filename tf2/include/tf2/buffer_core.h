@@ -35,6 +35,8 @@
 #include "LinearMath/Transform.h"
 #include "transform_storage.h"
 
+#include <algorithm>
+#include <cmath>
 #include <string>
 
 //#include "geometry_msgs/TwistStamped.h"
@@ -43,7 +45,7 @@
 #include <map>
 #include <unordered_map>
 #include <mutex>
-#include <boost/function.hpp>
+#include <functional>
 #include <memory>
 
 #include <tf2/exceptions.h>
@@ -273,7 +275,7 @@ public:
    */
   std::string allFramesAsString() const;
   
-  typedef boost::function<void(TransformableRequestHandle request_handle, const std::string& target_frame, const std::string& source_frame,
+  typedef std::function<void(TransformableRequestHandle request_handle, const std::string& target_frame, const std::string& source_frame,
                                TimePoint time, TransformableResult result)> TransformableCallback;
 
   /// \brief Internal use only
