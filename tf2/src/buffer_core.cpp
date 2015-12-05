@@ -1197,19 +1197,6 @@ void BufferCore::cancelTransformableRequest(TransformableRequestHandle handle)
 
 
 // backwards compability for tf methods
-boost::signals2::connection BufferCore::_addTransformsChangedListener(boost::function<void(void)> callback)
-{
-  boost::mutex::scoped_lock lock(transformable_requests_mutex_);
-  return _transforms_changed_.connect(callback);
-}
-
-void BufferCore::_removeTransformsChangedListener(boost::signals2::connection c)
-{
-  boost::mutex::scoped_lock lock(transformable_requests_mutex_);
-  c.disconnect();
-}
-
-
 bool BufferCore::_frameExists(const std::string& frame_id_str) const
 {
   boost::mutex::scoped_lock lock(frame_mutex_);
@@ -1316,9 +1303,6 @@ void BufferCore::testTransformableRequests()
 
   // unlock before allowing possible user callbacks to avoid potential detadlock (#91)
   lock.unlock();
-
-  // Backwards compatability callback for tf
-  _transforms_changed_();
 }
 
 

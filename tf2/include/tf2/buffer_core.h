@@ -35,8 +35,6 @@
 #include "LinearMath/Transform.h"
 #include "transform_storage.h"
 
-#include <boost/signals2.hpp>
-
 #include <string>
 
 //#include "geometry_msgs/TwistStamped.h"
@@ -301,17 +299,6 @@ public:
   /* Backwards compatability section for tf::Transformer you should not use these
    */
 
-  /**
-   * \brief Add a callback that happens when a new transform has arrived
-   *
-   * \param callback The callback, of the form void func();
-   * \return A boost::signals2::connection object that can be used to remove this
-   * listener
-   */
-  boost::signals2::connection _addTransformsChangedListener(boost::function<void(void)> callback);
-  void _removeTransformsChangedListener(boost::signals2::connection c);
-
-
   /**@brief Check if a frame exists in the tree
    * @param frame_id_str The frame id in question  */
   bool _frameExists(const std::string& frame_id_str) const;
@@ -408,11 +395,6 @@ private:
 
   struct RemoveRequestByCallback;
   struct RemoveRequestByID;
-
-  // Backwards compatability for tf message_filter
-  typedef boost::signals2::signal<void(void)> TransformsChangedSignal;
-  /// Signal which is fired whenever new transform data has arrived, from the thread the data arrived in
-  TransformsChangedSignal _transforms_changed_;
 
 
   /************************* Internal Functions ****************************/
