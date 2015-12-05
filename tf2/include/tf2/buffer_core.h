@@ -43,7 +43,7 @@
 #include <boost/unordered_map.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/function.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <tf2/exceptions.h>
 
@@ -55,7 +55,7 @@ typedef uint32_t TransformableCallbackHandle;
 typedef uint64_t TransformableRequestHandle;
 
 class TimeCacheInterface;
-typedef boost::shared_ptr<TimeCacheInterface> TimeCacheInterfacePtr;
+using TimeCacheInterfacePtr = std::shared_ptr<TimeCacheInterface>;
 
 enum TransformableResult
 {

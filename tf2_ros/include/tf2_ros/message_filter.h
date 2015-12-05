@@ -39,7 +39,7 @@
 #include <vector>
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <boost/thread.hpp>
 
 #include <message_filters/connection.h>
@@ -104,7 +104,7 @@ template<class M>
 class MessageFilter : public MessageFilterBase, public message_filters::SimpleFilter<M>
 {
 public:
-  typedef boost::shared_ptr<M const> MConstPtr;
+  using MConstPtr = std::shared_ptr<M const>;
   typedef ros::MessageEvent<M const> MEvent;
   typedef boost::function<void(const MConstPtr&, FilterFailureReason)> FailureCallback;
   typedef boost::signals2::signal<void(const MConstPtr&, FilterFailureReason)> FailureSignal;

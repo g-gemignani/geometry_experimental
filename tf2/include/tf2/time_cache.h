@@ -34,7 +34,7 @@
 
 #include "transform_storage.h"
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <list>
 #include <sstream>
 
@@ -75,7 +75,7 @@ public:
   virtual TimePoint getOldestTimestamp()=0;
 };
 
-typedef boost::shared_ptr<TimeCacheInterface> TimeCacheInterfacePtr;
+using TimeCacheInterfacePtr = std::shared_ptr<TimeCacheInterface>;
 
 /** \brief A class to keep a sorted linked list in time
  * This builds and maintains a list of timestamped
