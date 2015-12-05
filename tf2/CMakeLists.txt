@@ -7,7 +7,6 @@ find_package(ament_cmake)
 find_package(console_bridge REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
-message(WARNING "geometry_msgs_INCLUDE_DIRS is: [[${geometry_msgs_INCLUDE_DIRS}]]")
 include_directories(include src/bt ${geometry_msgs_INCLUDE_DIRS} ${console_bridge_INCLUDE_DIRS})
 
 # export user definitions
