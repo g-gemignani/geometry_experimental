@@ -52,7 +52,7 @@ namespace tf2_ros
 
   void BufferServer::checkTransforms(const builtin_interfaces::msg::TimerEvent& e)
   {
-    boost::mutex::scoped_lock l(mutex_);
+    std::unique_lock<std::mutex> lock(mutex_);
     for(std::list<GoalInfo>::iterator it = active_goals_.begin(); it != active_goals_.end();)
     {
       GoalInfo& info = *it;
@@ -112,7 +112,7 @@ namespace tf2_ros
 
   void BufferServer::cancelCB(GoalHandle gh)
   {
-    boost::mutex::scoped_lock l(mutex_);
+    std::unique_lock<std::mutex> lock(mutex_);
     //we need to find the goal in the list and remove it... also setting it as canceled
     //if its not in the list, we won't do anything since it will have already been set
     //as completed
@@ -185,7 +185,7 @@ namespace tf2_ros
       return;
     }
 
-    boost::mutex::scoped_lock l(mutex_);
+    std::unique_lock<std::mutex> lock(mutex_);
     active_goals_.push_back(goal_info);
   }
 

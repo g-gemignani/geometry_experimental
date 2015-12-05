@@ -34,7 +34,6 @@
 #include <tf2/buffer_core.h>
 #include <geometry_msgs/PointStamped.h>
 #include <boost/bind.hpp>
-#include <boost/scoped_ptr.hpp>
 
 #include "ros/ros.h"
 #include "ros/callback_queue.h"

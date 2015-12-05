@@ -128,7 +128,7 @@ void BufferCore::clear()
   //old_tf_.clear();
 
 
-  boost::mutex::scoped_lock lock(frame_mutex_);
+  std::unique_lock<std::mutex> lock(frame_mutex_);
   if ( frames_.size() > 1 )
   {
     for (std::vector<TimeCacheInterfacePtr>::iterator  cache_it = frames_.begin() + 1; cache_it != frames_.end(); ++cache_it)
@@ -192,7 +192,7 @@ bool BufferCore::setTransformImpl(const tf2::Transform& transform_in, const std:
     return false;
   
   {
-    boost::mutex::scoped_lock lock(frame_mutex_);
+    std::unique_lock<std::mutex> lock(frame_mutex_);
     CompactFrameID frame_number = lookupOrInsertFrameNumber(stripped_child_frame_id);
     TimeCacheInterfacePtr frame = getFrame(frame_number);
     if (frame == NULL)
@@ -513,7 +513,7 @@ void BufferCore::lookupTransformImpl(const std::string& target_frame,
                                                             const TimePoint& time, tf2::Transform& transform,
                                                             TimePoint& time_out) const
 {
-  boost::mutex::scoped_lock lock(frame_mutex_);
+  std::unique_lock<std::mutex> lock(frame_mutex_);
 
   if (target_frame == source_frame) {
     transform.setIdentity();
@@ -688,7 +688,7 @@ bool BufferCore::canTransformNoLock(CompactFrameID target_id, CompactFrameID sou
 bool BufferCore::canTransformInternal(CompactFrameID target_id, CompactFrameID source_id,
                                   const TimePoint& time, std::string* error_msg) const
 {
-  boost::mutex::scoped_lock lock(frame_mutex_);
+  std::unique_lock<std::mutex> lock(frame_mutex_);
   return canTransformNoLock(target_id, source_id, time, error_msg);
 }
 
@@ -704,7 +704,7 @@ bool BufferCore::canTransform(const std::string& target_frame, const std::string
   if (warnFrameId("canTransform argument source_frame", source_frame))
     return false;
 
-  boost::mutex::scoped_lock lock(frame_mutex_);
+  std::unique_lock<std::mutex> lock(frame_mutex_);
 
   CompactFrameID target_id = lookupFrameNumber(target_frame);
   CompactFrameID source_id = lookupFrameNumber(source_frame);
@@ -792,7 +792,7 @@ void BufferCore::createConnectivityErrorString(CompactFrameID source_frame, Comp
 
 std::string BufferCore::allFramesAsString() const
 {
-  boost::mutex::scoped_lock lock(frame_mutex_);
+  std::unique_lock<std::mutex> lock(frame_mutex_);
   return this->allFramesAsStringNoLock();
 }
 
@@ -1009,7 +1009,7 @@ tf2::TF2Error BufferCore::getLatestCommonTime(CompactFrameID target_id, CompactF
 std::string BufferCore::allFramesAsYAML(TimePoint current_time) const
 {
   std::stringstream mstream;
-  boost::mutex::scoped_lock lock(frame_mutex_);
+  std::unique_lock<std::mutex> lock(frame_mutex_);
 
   TransformStorage temp;
 
@@ -1076,7 +1076,7 @@ std::string BufferCore::allFramesAsYAML() const
 
 TransformableCallbackHandle BufferCore::addTransformableCallback(const TransformableCallback& cb)
 {
-  boost::mutex::scoped_lock lock(transformable_callbacks_mutex_);
+  std::unique_lock<std::mutex> lock(transformable_callbacks_mutex_);
   TransformableCallbackHandle handle = ++transformable_callbacks_counter_;
   while (!transformable_callbacks_.insert(std::make_pair(handle, cb)).second)
   {
@@ -1103,12 +1103,12 @@ struct BufferCore::RemoveRequestByCallback
 void BufferCore::removeTransformableCallback(TransformableCallbackHandle handle)
 {
   {
-    boost::mutex::scoped_lock lock(transformable_callbacks_mutex_);
+    std::unique_lock<std::mutex> lock(transformable_callbacks_mutex_);
     transformable_callbacks_.erase(handle);
   }
 
   {
-    boost::mutex::scoped_lock lock(transformable_requests_mutex_);
+    std::unique_lock<std::mutex> lock(transformable_requests_mutex_);
     V_TransformableRequest::iterator it = std::remove_if(transformable_requests_.begin(), transformable_requests_.end(), RemoveRequestByCallback(handle));
     transformable_requests_.erase(it, transformable_requests_.end());
   }
@@ -1163,7 +1163,7 @@ TransformableRequestHandle BufferCore::addTransformableRequest(TransformableCall
     req.source_string = source_frame;
   }
 
-  boost::mutex::scoped_lock lock(transformable_requests_mutex_);
+  std::unique_lock<std::mutex> lock(transformable_requests_mutex_);
   transformable_requests_.push_back(req);
 
   return req.request_handle;
@@ -1185,7 +1185,7 @@ struct BufferCore::RemoveRequestByID
 
 void BufferCore::cancelTransformableRequest(TransformableRequestHandle handle)
 {
-  boost::mutex::scoped_lock lock(transformable_requests_mutex_);
+  std::unique_lock<std::mutex> lock(transformable_requests_mutex_);
   V_TransformableRequest::iterator it = std::remove_if(transformable_requests_.begin(), transformable_requests_.end(), RemoveRequestByID(handle));
 
   if (it != transformable_requests_.end())
@@ -1199,14 +1199,14 @@ void BufferCore::cancelTransformableRequest(TransformableRequestHandle handle)
 // backwards compability for tf methods
 bool BufferCore::_frameExists(const std::string& frame_id_str) const
 {
-  boost::mutex::scoped_lock lock(frame_mutex_);
+  std::unique_lock<std::mutex> lock(frame_mutex_);
   return frameIDs_.count(frame_id_str);
 }
 
 bool BufferCore::_getParent(const std::string& frame_id, TimePoint time, std::string& parent) const
 {
 
-  boost::mutex::scoped_lock lock(frame_mutex_);
+  std::unique_lock<std::mutex> lock(frame_mutex_);
   CompactFrameID frame_number = lookupFrameNumber(frame_id);
   TimeCacheInterfacePtr frame = getFrame(frame_number);
 
@@ -1225,7 +1225,7 @@ void BufferCore::_getFrameStrings(std::vector<std::string> & vec) const
 {
   vec.clear();
 
-  boost::mutex::scoped_lock lock(frame_mutex_);
+  std::unique_lock<std::mutex> lock(frame_mutex_);
 
   TransformStorage temp;
 
@@ -1242,7 +1242,7 @@ void BufferCore::_getFrameStrings(std::vector<std::string> & vec) const
 
 void BufferCore::testTransformableRequests()
 {
-  boost::mutex::scoped_lock lock(transformable_requests_mutex_);
+  std::unique_lock<std::mutex> lock(transformable_requests_mutex_);
   V_TransformableRequest::iterator it = transformable_requests_.begin();
   for (; it != transformable_requests_.end();)
   {
@@ -1279,7 +1279,7 @@ void BufferCore::testTransformableRequests()
     if (do_cb)
     {
       {
-        boost::mutex::scoped_lock lock2(transformable_callbacks_mutex_);
+        std::unique_lock<std::mutex> lock2(transformable_callbacks_mutex_);
         M_TransformableCallback::iterator it = transformable_callbacks_.find(req.cb_handle);
         if (it != transformable_callbacks_.end())
         {
@@ -1310,7 +1310,7 @@ std::string BufferCore::_allFramesAsDot(TimePoint current_time) const
 {
   std::stringstream mstream;
   mstream << "digraph G {" << std::endl;
-  boost::mutex::scoped_lock lock(frame_mutex_);
+  std::unique_lock<std::mutex> lock(frame_mutex_);
 
   TransformStorage temp;
 
@@ -1408,7 +1408,7 @@ void BufferCore::_chainAsVector(const std::string & target_frame, TimePoint targ
   output.clear(); //empty vector
 
   std::stringstream mstream;
-  boost::mutex::scoped_lock lock(frame_mutex_);
+  std::unique_lock<std::mutex> lock(frame_mutex_);
 
   TransformAccum accum;
 

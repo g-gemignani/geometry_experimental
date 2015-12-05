@@ -72,7 +72,7 @@ namespace tf2_ros
       const Buffer& buffer_;
       LookupTransformServer server_;
       std::list<GoalInfo> active_goals_;
-      boost::mutex mutex_;
+      std::mutex mutex_;
       builtin_interfaces::msg::Timer check_timer_;
   };
 }

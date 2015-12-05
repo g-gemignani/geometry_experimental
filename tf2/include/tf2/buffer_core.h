@@ -40,8 +40,9 @@
 //#include "geometry_msgs/TwistStamped.h"
 #include "geometry_msgs/msg/transform_stamped.hpp"
 
-#include <boost/unordered_map.hpp>
-#include <boost/thread/mutex.hpp>
+#include <map>
+#include <unordered_map>
+#include <mutex>
 #include <boost/function.hpp>
 #include <memory>
 
@@ -321,7 +322,7 @@ public:
   }
 
   tf2::TF2Error _getLatestCommonTime(CompactFrameID target_frame, CompactFrameID source_frame, TimePoint& time, std::string* error_string) const {
-    boost::mutex::scoped_lock lock(frame_mutex_);
+    std::unique_lock<std::mutex> lock(frame_mutex_);
     return getLatestCommonTime(target_frame, source_frame, time, error_string);
   }
 
@@ -359,10 +360,10 @@ private:
   V_TimeCacheInterface frames_;
   
   /** \brief A mutex to protect testing and allocating new frames on the above vector. */
-  mutable boost::mutex frame_mutex_;
+  mutable std::mutex frame_mutex_;
 
   /** \brief A map from string frame ids to CompactFrameID */
-  typedef boost::unordered_map<std::string, CompactFrameID> M_StringToCompactFrameID;
+  typedef std::unordered_map<std::string, CompactFrameID> M_StringToCompactFrameID;
   M_StringToCompactFrameID frameIDs_;
   /** \brief A map from CompactFrameID frame_id_numbers to string for debugging and output */
   std::vector<std::string> frameIDs_reverse;
@@ -373,10 +374,10 @@ private:
   /// How long to cache transform history
   Duration cache_time_;
 
-  typedef boost::unordered_map<TransformableCallbackHandle, TransformableCallback> M_TransformableCallback;
+  typedef std::unordered_map<TransformableCallbackHandle, TransformableCallback> M_TransformableCallback;
   M_TransformableCallback transformable_callbacks_;
   uint32_t transformable_callbacks_counter_;
-  boost::mutex transformable_callbacks_mutex_;
+  std::mutex transformable_callbacks_mutex_;
 
   struct TransformableRequest
   {
@@ -390,7 +391,7 @@ private:
   };
   typedef std::vector<TransformableRequest> V_TransformableRequest;
   V_TransformableRequest transformable_requests_;
-  boost::mutex transformable_requests_mutex_;
+  std::mutex transformable_requests_mutex_;
   uint64_t transformable_requests_counter_;
 
   struct RemoveRequestByCallback;
