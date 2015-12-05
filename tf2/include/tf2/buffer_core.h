@@ -275,8 +275,8 @@ public:
    */
   std::string allFramesAsString() const;
   
-  typedef std::function<void(TransformableRequestHandle request_handle, const std::string& target_frame, const std::string& source_frame,
-                               TimePoint time, TransformableResult result)> TransformableCallback;
+  using TransformableCallback = std::function<void(TransformableRequestHandle request_handle, const std::string& target_frame, const std::string& source_frame,
+                                                   TimePoint time, TransformableResult result)>;
 
   /// \brief Internal use only
   TransformableCallbackHandle addTransformableCallback(const TransformableCallback& cb);
