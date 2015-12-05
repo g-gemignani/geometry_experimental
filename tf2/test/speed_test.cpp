@@ -27,18 +27,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <console_bridge/console.h>
+#include <string>
+
 #include <tf2/buffer_core.h>
 
-#include <console_bridge/console.h>
-
-#include <boost/lexical_cast.hpp>
 
 int main(int argc, char** argv)
 {
   uint32_t num_levels = 10;
   if (argc > 1)
   {
-    num_levels = boost::lexical_cast<uint32_t>(argv[1]);
+    num_levels = std::stoi(to_string(argv[1]));
   }
 
   tf2::BufferCore bc;
@@ -95,8 +95,8 @@ int main(int argc, char** argv)
 
   //logInfo_STREAM(bc.allFramesAsYAML());
 
-  std::string v_frame0 = boost::lexical_cast<std::string>(num_levels - 1);
-  std::string v_frame1 = boost::lexical_cast<std::string>(num_levels/2 - 1);
+  std::string v_frame0 = std::to_string(num_levels - 1);
+  std::string v_frame1 = std::to_string(num_levels/2 - 1);
   logInform("%s to %s", v_frame0.c_str(), v_frame1.c_str());
   geometry_msgs::TransformStamped out_t;
 
