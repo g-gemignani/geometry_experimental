@@ -20,7 +20,7 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>libconsole-bridge-dev</depend>
+  <depend>console_bridge</depend>
   <depend>geometry_msgs</depend>
   
   <test_depend>ament_cmake_gtest</test_depend>
