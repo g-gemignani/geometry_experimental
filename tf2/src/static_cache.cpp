@@ -37,8 +37,6 @@
 
 using namespace tf2;
 
-constexpr Duration TimeCache::DEFAULT_MAX_STORAGE_TIME;
-
 bool StaticCache::getData(TimePoint time, TransformStorage & data_out, std::string* error_str) //returns false if data not available
 {
   data_out = storage_;
@@ -78,4 +76,3 @@ TimePoint StaticCache::getOldestTimestamp()
 {   
   return TimePoint();
 };
-

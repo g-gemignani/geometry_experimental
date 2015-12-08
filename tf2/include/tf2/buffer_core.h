@@ -66,6 +66,9 @@ enum TransformableResult
   TransformFailure,
 };
 
+
+static constexpr Duration BUFFER_CORE_DEFAULT_CACHE_TIME = std::chrono::seconds(10);  //!< The default amount of time to cache data in seconds
+
 /** \brief A Class which provides coordinate transforms between any two frames in a system.
  *
  * This class provides a simple interface to allow recording and lookup of
@@ -88,7 +91,6 @@ class BufferCore
 {
 public:
   /************* Constants ***********************/
-  static constexpr Duration DEFAULT_CACHE_TIME = std::chrono::seconds(10);  //!< The default amount of time to cache data in seconds
   static const uint32_t MAX_GRAPH_DEPTH = 1000UL;  //!< The default amount of time to cache data in seconds
 
   /** Constructor
@@ -96,7 +98,7 @@ public:
    * \param cache_time How long to keep a history of transforms in nanoseconds
    *
    */
-  BufferCore(Duration cache_time_ = DEFAULT_CACHE_TIME);
+  BufferCore(Duration cache_time_ = BUFFER_CORE_DEFAULT_CACHE_TIME);
   virtual ~BufferCore(void);
 
   /** \brief Clear all data */
@@ -117,10 +119,9 @@ public:
                                  tf2::Vector3(transform.transform.translation.x,
                                               transform.transform.translation.y,
                                               transform.transform.translation.z));
-    TimePoint time_point;
+    TimePoint time_point(std::chrono::nanoseconds(transform.header.stamp.nanosec) + std::chrono::seconds(transform.header.stamp.sec));
     return setTransformImpl(tf2_transform, transform.header.frame_id, transform.child_frame_id,
-                            time_point + std::chrono::seconds(transform.header.stamp.sec) +
-                                std::chrono::nanoseconds(transform.header.stamp.nanosec),
+                            time_point,
                             authority, is_static);
   }
 

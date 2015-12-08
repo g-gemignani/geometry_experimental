@@ -160,7 +160,7 @@ static int BufferCore_init(PyObject *self, PyObject *args, PyObject *kw)
 {
   ros::Duration cache_time;
 
-  cache_time.fromSec(tf2::BufferCore::DEFAULT_CACHE_TIME);
+  cache_time.fromSec(tf2::BUFFER_CORE_DEFAULT_CACHE_TIME);
 
   if (!PyArg_ParseTuple(args, "|O&", rosduration_converter, &cache_time))
     return -1;

@@ -40,7 +40,7 @@
 namespace tf2
 {
 
-constexpr Duration BufferCore::DEFAULT_CACHE_TIME;
+// constexpr Duration BufferCore::DEFAULT_CACHE_TIME;
 
 bool startsWithSlash(const std::string& frame_id)
 {

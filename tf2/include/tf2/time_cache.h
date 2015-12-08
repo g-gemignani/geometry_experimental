@@ -77,6 +77,8 @@ public:
 
 using TimeCacheInterfacePtr = std::shared_ptr<TimeCacheInterface>;
 
+constexpr Duration TIMECACHE_DEFAULT_MAX_STORAGE_TIME = std::chrono::seconds(10); //!< default value of 10 seconds storage
+
 /** \brief A class to keep a sorted linked list in time
  * This builds and maintains a list of timestamped
  * data.  And provides lookup functions to get
@@ -86,9 +88,8 @@ class TimeCache : public TimeCacheInterface
  public:
   static const int MIN_INTERPOLATION_DISTANCE = 5; //!< Number of nano-seconds to not interpolate below.
   static const unsigned int MAX_LENGTH_LINKED_LIST = 1000000; //!< Maximum length of linked list, to make sure not to be able to use unlimited memory.
-  static constexpr Duration DEFAULT_MAX_STORAGE_TIME = std::chrono::seconds(10); //!< default value of 10 seconds storage
 
-  TimeCache(Duration  max_storage_time = DEFAULT_MAX_STORAGE_TIME);
+  TimeCache(Duration  max_storage_time = TIMECACHE_DEFAULT_MAX_STORAGE_TIME);
 
 
   /// Virtual methods
