@@ -45,7 +45,7 @@ namespace tf2
 typedef std::chrono::system_clock::time_point TimePoint;
 typedef std::chrono::system_clock::duration Duration;
 // This is the zero time in ROS
-constexpr TimePoint TimePointZero = TimePoint(Duration::zero());
+static const TimePoint TimePointZero = TimePoint(Duration::zero());
 
 // Display functions as there is no default display
 // TODO: find a proper way to handle display
