@@ -119,10 +119,10 @@ public:
                                  tf2::Vector3(transform.transform.translation.x,
                                               transform.transform.translation.y,
                                               transform.transform.translation.z));
-    TimePoint time_point(std::chrono::nanoseconds(transform.header.stamp.nanosec) + std::chrono::seconds(transform.header.stamp.sec));
+    TimePoint time_point(std::chrono::nanoseconds(transform.header.stamp.nanosec) +
+        std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::seconds(transform.header.stamp.sec)));
     return setTransformImpl(tf2_transform, transform.header.frame_id, transform.child_frame_id,
-                            time_point,
-                            authority, is_static);
+                            time_point, authority, is_static);
   }
 
   /*********** Accessors *************/

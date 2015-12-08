@@ -42,8 +42,8 @@
 namespace tf2
 {
 
-using TimePoint = std::chrono::system_clock::time_point;
-using Duration = std::chrono::system_clock::duration;
+using TimePoint = std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
+using Duration = std::chrono::duration<int, std::nano>;
 // This is the zero time in ROS
 static const TimePoint TimePointZero = TimePoint(Duration::zero());
 
@@ -53,7 +53,7 @@ inline std::string displayTimePoint(const TimePoint& stamp)
 {
   // Below would only work with GCC 5.0 and above
   //return std::put_time(&stamp, "%c");
-  std::time_t time = std::chrono::system_clock::to_time_t(stamp);
+  std::time_t time = std::chrono::system_clock::to_time_t(std::chrono::time_point_cast<std::chrono::milliseconds>(stamp));
   return std::ctime(&time);
 }
 inline double displayDuration(const Duration& duration)
