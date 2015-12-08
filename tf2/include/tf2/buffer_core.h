@@ -117,10 +117,11 @@ public:
                                  tf2::Vector3(transform.transform.translation.x,
                                               transform.transform.translation.y,
                                               transform.transform.translation.z));
-
+    TimePoint time_point;
     return setTransformImpl(tf2_transform, transform.header.frame_id, transform.child_frame_id,
-                            TimePoint(std::chrono::seconds(transform.header.stamp.sec) +
-                                      std::chrono::nanoseconds(transform.header.stamp.nanosec)), authority, is_static);
+                            time_point + std::chrono::seconds(transform.header.stamp.sec) +
+                                std::chrono::nanoseconds(transform.header.stamp.nanosec),
+                            authority, is_static);
   }
 
   /*********** Accessors *************/
