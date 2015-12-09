@@ -30,6 +30,7 @@
 #include <console_bridge/console.h>
 #include <string>
 
+#include <geometry_msgs/msg/transform_stamped.hpp>
 #include <tf2/buffer_core.h>
 
 
@@ -38,11 +39,11 @@ int main(int argc, char** argv)
   uint32_t num_levels = 10;
   if (argc > 1)
   {
-    num_levels = std::stoi(std::to_string(argv[1]));
+    num_levels = std::stoi(argv[1]);
   }
 
   tf2::BufferCore bc;
-  geometry_msgs::TransformStamped t;
+  geometry_msgs::msg::TransformStamped t;
   t.header.stamp = builtin_interfaces::msg::Time(1);
   t.header.frame_id = "root";
   t.child_frame_id = "0";
@@ -98,7 +99,7 @@ int main(int argc, char** argv)
   std::string v_frame0 = std::to_string(num_levels - 1);
   std::string v_frame1 = std::to_string(num_levels/2 - 1);
   logInform("%s to %s", v_frame0.c_str(), v_frame1.c_str());
-  geometry_msgs::TransformStamped out_t;
+  geometry_msgs::msg::TransformStamped out_t;
 
   const uint32_t count = 1000000;
   logInform("Doing %d %d-level tests", count, num_levels);
