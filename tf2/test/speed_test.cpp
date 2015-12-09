@@ -38,7 +38,7 @@ int main(int argc, char** argv)
   uint32_t num_levels = 10;
   if (argc > 1)
   {
-    num_levels = std::stoi(to_string(argv[1]));
+    num_levels = std::stoi(std::to_string(argv[1]));
   }
 
   tf2::BufferCore bc;
