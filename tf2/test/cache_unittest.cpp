@@ -30,7 +30,6 @@
 #include <cmath>
 #include <gtest/gtest.h>
 #include <stdexcept>
-#include <sys/time.h>
 
 #include "tf2/time_cache.h"
 #include "tf2/LinearMath/Quaternion.h"

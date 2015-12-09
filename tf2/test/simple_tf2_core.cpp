@@ -27,9 +27,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <chrono>
 #include <gtest/gtest.h>
 #include <tf2/buffer_core.h>
-#include <sys/time.h>
 #include "tf2/LinearMath/Vector3.h"
 #include "tf2/exceptions.h"
 
@@ -38,9 +38,7 @@ typedef std::chrono::system_clock::time_point TimePoint;
 void seed_rand()
 {
   //Seed random number generator with current microseond count
-  timeval temp_time_struct;
-  gettimeofday(&temp_time_struct,NULL);
-  srand(temp_time_struct.tv_usec);
+  srand(std::chrono::system_clock::now().time_since_epoch().count());
 };
 
 void generate_rand_vectors(double scale, uint64_t runs, std::vector<double>& xvalues, std::vector<double>& yvalues, std::vector<double>&zvalues)
