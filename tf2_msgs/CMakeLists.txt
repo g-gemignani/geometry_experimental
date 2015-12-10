@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(tf2_msgs)
 
+if(NOT WIN32)
+  add_definitions(-std=c++11)
+endif()
+
 find_package(ament_cmake)
 find_package(rosidl_default_generators REQUIRED)
 find_package(builtin_interfaces REQUIRED)

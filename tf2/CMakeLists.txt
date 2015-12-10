@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(tf2)
 
-add_definitions(-std=gnu++11)
+if(NOT WIN32)
+  add_definitions(-std=c++11)
+endif()
 
 find_package(ament_cmake)
 find_package(console_bridge REQUIRED)
