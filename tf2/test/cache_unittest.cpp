@@ -42,7 +42,7 @@ void seed_rand()
   values.clear();
   for (unsigned int i = 0; i < 1000; i++)
   {
-    int pseudo_rand = std::floor(i * M_PI);
+    int pseudo_rand = std::floor(i * 3.141592653589793);
     values.push_back(( pseudo_rand % 100)/50.0 - 1.0);
     //printf("Seeding with %f\n", values.back());
   }
