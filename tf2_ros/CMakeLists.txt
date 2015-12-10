@@ -5,38 +5,51 @@ if(NOT ANDROID)
 set(TF2_PY tf2_py)
 endif()
 
-find_package(catkin REQUIRED COMPONENTS
-  actionlib
-  actionlib_msgs
-  geometry_msgs
-  message_filters
-  roscpp
-  rosgraph
-  rospy
-  tf2
-  tf2_msgs
-  ${TF2_PY}
-)
-find_package(Boost REQUIRED COMPONENTS thread)
+find_package(ament_cmake REQUIRED)
+# find_package(actionlib REQUIRED)
+# find_package(actionlib_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_msgs REQUIRED)
 
-catkin_python_setup()
+# 
+# find_package(catkin REQUIRED COMPONENTS
+#   actionlib
+#   actionlib_msgs
+#   geometry_msgs
+#   message_filters
+#   roscpp
+#   rosgraph
+#   rospy
+#   tf2
+#   tf2_msgs
+#   ${TF2_PY}
+# )
 
-catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS
-  actionlib
-  actionlib_msgs
-  geometry_msgs
-  message_filters
-  roscpp
-  rosgraph
-  tf2
-  tf2_msgs
-  ${TF2_PY}
-)
+# catkin_python_setup()
 
-include_directories(include ${catkin_INCLUDE_DIRS})
+# catkin_package(
+#   INCLUDE_DIRS include
+#   LIBRARIES ${PROJECT_NAME}
+#   CATKIN_DEPENDS
+#   actionlib
+#   actionlib_msgs
+#   geometry_msgs
+#   message_filters
+#   roscpp
+#   rosgraph
+#   tf2
+#   tf2_msgs
+#   ${TF2_PY}
+# )
+
+include_directories(include
+  ${geometry_msgs_INCLUDE_DIRS}
+  ${rclcpp_INCLUDE_DIRS}
+  ${tf2_INCLUDE_DIRS}
+  ${tf2_msgs_INCLUDE_DIRS}
+  )
 
 # tf2_ros library
 add_library(${PROJECT_NAME}
@@ -47,51 +60,55 @@ add_library(${PROJECT_NAME}
   src/transform_broadcaster.cpp
   src/static_transform_broadcaster.cpp
 )
-add_dependencies(${PROJECT_NAME} tf2_msgs_gencpp)
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
-# buffer_server executable
-add_executable(${PROJECT_NAME}_buffer_server src/buffer_server_main.cpp)
-add_dependencies(${PROJECT_NAME}_buffer_server tf2_msgs_gencpp)
-target_link_libraries(${PROJECT_NAME}_buffer_server
-  ${PROJECT_NAME}
-  ${catkin_LIBRARIES}
-  ${Boost_LIBRARIES}
-)
-set_target_properties(${PROJECT_NAME}_buffer_server
-  PROPERTIES OUTPUT_NAME buffer_server
-)
+set(upstream_libraries
+  ${geometry_msgs_LIBRARIES}
+  ${rclcpp_LIBRARIES}
+  ${tf2_LIBRARIES}
+  ${tf2_msgs_LIBRARIES}
+  )
+
+target_link_libraries(${PROJECT_NAME} ${upstream_LIBRARIES})
+
+# # buffer_server executable
+# add_executable(buffer_server src/buffer_server_main.cpp)
+# add_dependencies(${PROJECT_NAME}_buffer_server tf2_msgs_gencpp)
+# target_link_libraries(${PROJECT_NAME}_buffer_server
+#   ${PROJECT_NAME}
+#   ${catkin_LIBRARIES}
+#   ${Boost_LIBRARIES}
+# )
+
 
 # static_transform_publisher
-add_executable(${PROJECT_NAME}_static_transform_publisher
+add_executable(static_transform_publisher
   src/static_transform_broadcaster_program.cpp
 )
-add_dependencies(${PROJECT_NAME}_static_transform_publisher tf2_msgs_gencpp)
-target_link_libraries(${PROJECT_NAME}_static_transform_publisher
+target_link_libraries(static_transform_publisher
   ${PROJECT_NAME}
-  ${catkin_LIBRARIES}
+  ${upstream_LIBRARIES}
 )
-set_target_properties(${PROJECT_NAME}_static_transform_publisher
-  PROPERTIES OUTPUT_NAME static_transform_publisher
-)
+
 
 # Install rules
 install(TARGETS
-  ${PROJECT_NAME} ${PROJECT_NAME}_buffer_server
-  ${PROJECT_NAME}_static_transform_publisher
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  ${PROJECT_NAME}
+  # buffer_server
+  static_transform_publisher
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
 install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  DESTINATION include/${PROJECT_NAME}
 )
 
 
 # Tests
-if(CATKIN_ENABLE_TESTING)
-
+# if(AMENT_ENABLE_TESTING)
+if (false)
+  
 # new requirements for testing
 find_package(catkin REQUIRED COMPONENTS
   actionlib
@@ -133,3 +150,7 @@ add_rostest(test/transform_listener_unittest.launch)
 add_rostest(test/transform_listener_time_reset_test.launch)
 
 endif()
+# TODO(tfoote) Need amend_export_dependenceies?
+ament_export_include_directories(include)
+ament_export_libraries(${PROJECT_NAME})
+ament_package()
