@@ -34,6 +34,11 @@
 
 using namespace tf2_ros;
 
+//TODO(tfoote replace these terrible macros)
+#define ROS_ERROR printf
+#define ROS_FATAL printf
+#define ROS_INFO printf
+#define ROS_WARN printf
 
 TransformListener::TransformListener(tf2::BufferCore& buffer, bool spin_thread):
   dedicated_listener_thread_(NULL), buffer_(buffer), using_dedicated_thread_(false)
@@ -44,7 +49,7 @@ TransformListener::TransformListener(tf2::BufferCore& buffer, bool spin_thread):
     init();
 }
 
-TransformListener::TransformListener(tf2::BufferCore& buffer, const ros::NodeHandle& nh, bool spin_thread)
+TransformListener::TransformListener(tf2::BufferCore& buffer, rclcpp::node::Node::SharedPtr nh, bool spin_thread)
 : dedicated_listener_thread_(NULL)
 , node_(nh)
 , buffer_(buffer)
@@ -67,41 +72,54 @@ TransformListener::~TransformListener()
   }
 }
 
+void test_callback(const tf2_msgs::msg::TFMessage::SharedPtr msg){
+  return;
+}
+
 void TransformListener::init()
 {
-  message_subscriber_tf_ = node_.subscribe<tf2_msgs::TFMessage>("/tf", 100, boost::bind(&TransformListener::subscription_callback, this, _1)); ///\todo magic number
-  message_subscriber_tf_static_ = node_.subscribe<tf2_msgs::TFMessage>("/tf_static", 100, boost::bind(&TransformListener::static_subscription_callback, this, _1)); ///\todo magic number
+  rmw_qos_profile_t custom_qos_profile = rmw_qos_profile_default;
+  custom_qos_profile.depth = 100;
+  // std::function<void(const tf2_msgs::msg::TFMessage::SharedPtr)> standard_callback = std::bind(&tf2_ros::TransformListener::subscription_callback, this, _1);
+  auto standard_callback = std::bind(&tf2_ros::TransformListener::subscription_callback, this, _1);
+  auto static_callback = std::bind(&tf2_ros::TransformListener::static_subscription_callback, this, _1);
+  // TODO(tfoote) UNCOMMENT
+  message_subscription_tf_ = node_->create_subscription<tf2_msgs::msg::TFMessage>("/tf", test_callback, custom_qos_profile);
+  // message_subscription_tf_ = node_->create_subscription<tf2_msgs::msg::TFMessage>("/tf", standard_callback, custom_qos_profile);
+  // message_subscription_tf_static_ = node_->create_subscription<tf2_msgs::msg::TFMessage>("/tf_static", static_callback, custom_qos_profile);
 }
 
 void TransformListener::initWithThread()
 {
-  using_dedicated_thread_ = true;
-  ros::SubscribeOptions ops_tf = ros::SubscribeOptions::create<tf2_msgs::TFMessage>("/tf", 100, boost::bind(&TransformListener::subscription_callback, this, _1), ros::VoidPtr(), &tf_message_callback_queue_); ///\todo magic number
-  message_subscriber_tf_ = node_.subscribe(ops_tf);
-  
-  ros::SubscribeOptions ops_tf_static = ros::SubscribeOptions::create<tf2_msgs::TFMessage>("/tf_static", 100, boost::bind(&TransformListener::static_subscription_callback, this, _1), ros::VoidPtr(), &tf_message_callback_queue_); ///\todo magic number
-  message_subscriber_tf_static_ = node_.subscribe(ops_tf_static);
-
-  dedicated_listener_thread_ = new boost::thread(boost::bind(&TransformListener::dedicatedListenerThread, this));
-
-  //Tell the buffer we have a dedicated thread to enable timeouts
-  buffer_.setUsingDedicatedThread(true);
+  this->init();
+  //TODO(tfoote) reenable dedicated thread
+  // using_dedicated_thread_ = true;
+  // ros::SubscribeOptions ops_tf = ros::SubscribeOptions::create<tf2_msgs::TFMessage>("/tf", 100, boost::bind(&TransformListener::subscription_callback, this, _1), ros::VoidPtr(), &tf_message_callback_queue_); ///\todo magic number
+  // message_subscription_tf_ = node_.subscribe(ops_tf);
+  // 
+  // ros::SubscribeOptions ops_tf_static = ros::SubscribeOptions::create<tf2_msgs::TFMessage>("/tf_static", 100, boost::bind(&TransformListener::static_subscription_callback, this, _1), ros::VoidPtr(), &tf_message_callback_queue_); ///\todo magic number
+  // message_subscription_tf_static_ = node_.subscribe(ops_tf_static);
+  // 
+  // dedicated_listener_thread_ = new boost::thread(boost::bind(&TransformListener::dedicatedListenerThread, this));
+  // 
+  // //Tell the buffer we have a dedicated thread to enable timeouts
+  // buffer_.setUsingDedicatedThread(true);
 }
 
 
 
-void TransformListener::subscription_callback(const ros::MessageEvent<tf2_msgs::TFMessage const>& msg_evt)
+void TransformListener::subscription_callback(const tf2_msgs::msg::TFMessage::SharedPtr msg)
 {
-  subscription_callback_impl(msg_evt, false);
+  subscription_callback_impl(msg, false);
 }
-void TransformListener::static_subscription_callback(const ros::MessageEvent<tf2_msgs::TFMessage const>& msg_evt)
+void TransformListener::static_subscription_callback(const tf2_msgs::msg::TFMessage::SharedPtr msg)
 {
-  subscription_callback_impl(msg_evt, true);
+  subscription_callback_impl(msg, true);
 }
 
-void TransformListener::subscription_callback_impl(const ros::MessageEvent<tf2_msgs::TFMessage const>& msg_evt, bool is_static)
+void TransformListener::subscription_callback_impl(const tf2_msgs::msg::TFMessage::SharedPtr msg, bool is_static)
 {
-  builtin_interfaces::msg::Time now = builtin_interfaces::msg::Time::now();
+  auto now = tf2::get_now();
   if(now < last_update_){
     ROS_WARN("Detected jump back in time. Clearing TF buffer.");
     buffer_.clear();
@@ -110,8 +128,9 @@ void TransformListener::subscription_callback_impl(const ros::MessageEvent<tf2_m
 
 
 
-  const tf2_msgs::TFMessage& msg_in = *(msg_evt.getConstMessage());
-  std::string authority = msg_evt.getPublisherName(); // lookup the authority
+  const tf2_msgs::msg::TFMessage& msg_in = *msg;
+  //TODO(tfoote) find a way to get the authority
+  std::string authority = "Authority undetectable"; //msg_evt.getPublisherName(); // lookup the authority
   for (unsigned int i = 0; i < msg_in.transforms.size(); i++)
   {
     try
@@ -127,8 +146,3 @@ void TransformListener::subscription_callback_impl(const ros::MessageEvent<tf2_m
     }
   }
 };
-
-
-
-
-

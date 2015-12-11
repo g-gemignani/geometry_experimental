@@ -59,24 +59,26 @@ private:
   void initWithThread();
 
   /// Callback function for ros message subscriptoin
-  void subscription_callback(const ros::MessageEvent<tf2_msgs::TFMessage const>& msg_evt);
-  void static_subscription_callback(const ros::MessageEvent<tf2_msgs::TFMessage const>& msg_evt);
-  void subscription_callback_impl(const ros::MessageEvent<tf2_msgs::TFMessage const>& msg_evt, bool is_static);
+  void subscription_callback(const tf2_msgs::msg::TFMessage::SharedPtr msg);
+  void static_subscription_callback(const tf2_msgs::msg::TFMessage::SharedPtr msg);
+  void subscription_callback_impl(const tf2_msgs::msg::TFMessage::SharedPtr msg, bool is_static);
 
-  ros::CallbackQueue tf_message_callback_queue_;
+  // ros::CallbackQueue tf_message_callback_queue_;
   boost::thread* dedicated_listener_thread_;
-  ros::NodeHandle node_;
-  ros::Subscriber message_subscriber_tf_;
-  ros::Subscriber message_subscriber_tf_static_;
+  rclcpp::node::Node::SharedPtr node_;
+  rclcpp::subscription::Subscription<tf2_msgs::msg::TFMessage>::SharedPtr message_subscription_tf_;
+  rclcpp::subscription::Subscription<tf2_msgs::msg::TFMessage>::SharedPtr message_subscription_tf_static_;
   tf2::BufferCore& buffer_;
   bool using_dedicated_thread_;
-  builtin_interfaces::msg::Time last_update_;
+  tf2::TimePoint last_update_;
  
   void dedicatedListenerThread()
   {
     while (using_dedicated_thread_)
     {
-      tf_message_callback_queue_.callAvailable(ros::WallDuration(0.01));
+      break;
+      //TODO(tfoote) reenable callback queue processing 
+      //tf_message_callback_queue_.callAvailable(ros::WallDuration(0.01));
     }
   };
 
