@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(tf2_ros)
 
+if(NOT WIN32)
+  add_definitions(-std=c++11)
+endif()
+
 if(NOT ANDROID)
 set(TF2_PY tf2_py)
 endif()
@@ -12,6 +16,8 @@ find_package(geometry_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_msgs REQUIRED)
+
+find_package(rmw_implementation) # not needed after rmw typesupport refactor
 
 # 
 # find_package(catkin REQUIRED COMPONENTS
@@ -49,14 +55,16 @@ include_directories(include
   ${rclcpp_INCLUDE_DIRS}
   ${tf2_INCLUDE_DIRS}
   ${tf2_msgs_INCLUDE_DIRS}
+  ${rmw_implementation_INCLUDE_DIRS}
   )
+message(fatal_error "tf2_msgs_INCLUDE_DIRS ${tf2_msgs_INCLUDE_DIRS}")
 
 # tf2_ros library
 add_library(${PROJECT_NAME}
   src/buffer.cpp
-  src/transform_listener.cpp
-  src/buffer_client.cpp
-  src/buffer_server.cpp
+  # src/transform_listener.cpp
+  # src/buffer_client.cpp
+  # src/buffer_server.cpp
   src/transform_broadcaster.cpp
   src/static_transform_broadcaster.cpp
 )
@@ -92,7 +100,7 @@ target_link_libraries(static_transform_publisher
 
 # Install rules
 install(TARGETS
-  ${PROJECT_NAME}
+  # ${PROJECT_NAME}
   # buffer_server
   static_transform_publisher
   ARCHIVE DESTINATION lib

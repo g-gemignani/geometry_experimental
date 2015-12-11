@@ -32,10 +32,9 @@
 #ifndef TF2_ROS_TRANSFORMLISTENER_H
 #define TF2_ROS_TRANSFORMLISTENER_H
 
-#include "std_msgs/Empty.h"
-#include "tf2_msgs/TFMessage.h"
-#include "ros/ros.h"
-#include "ros/callback_queue.h"
+#include "tf2_msgs/msg/tf_message.hpp"
+#include "rclcpp/rclcpp.hpp"
+// #include "ros/callback_queue.h"
 
 #include "tf2_ros/buffer.h"
 
@@ -49,7 +48,7 @@ class TransformListener
 public:
   /**@brief Constructor for transform listener */
   TransformListener(tf2::BufferCore& buffer, bool spin_thread = true);
-  TransformListener(tf2::BufferCore& buffer, const ros::NodeHandle& nh, bool spin_thread = true);
+  TransformListener(tf2::BufferCore& buffer, rclcpp::node::Node::SharedPtr nh, bool spin_thread = true);
 
   ~TransformListener();
 

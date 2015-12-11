@@ -50,6 +50,15 @@ using IDuration = std::chrono::duration<int, std::nano>;
 // This is the zero time in ROS
 static const TimePoint TimePointZero = TimePoint(IDuration::zero());
 
+inline TimePoint get_now()
+{
+  return std::chrono::system_clock::now();
+}
+
+inline double TempToSec(const TempDuration & input){
+  return std::chrono::duration_cast<std::chrono::seconds>(input).count();
+}
+
 // Display functions as there is no default display
 // TODO: find a proper way to handle display
 inline std::string displayTimePoint(const TimePoint& stamp)

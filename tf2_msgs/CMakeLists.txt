@@ -24,5 +24,5 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 #  actionlib_msgs
 
 # TODO(tfoote) Need amend_export_dependenceies?
-
+ament_export_dependencies(rosidl_generator_cpp)
 ament_package()
