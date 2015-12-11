@@ -53,7 +53,7 @@ TransformStorage::TransformStorage(const TimePoint& stamp, const Quaternion& q, 
 {
 }
 
-TimeCache::TimeCache(Duration max_storage_time)
+TimeCache::TimeCache(TempDuration max_storage_time)
 : max_storage_time_(max_storage_time)
 {}
 
@@ -98,7 +98,7 @@ uint8_t TimeCache::findClosest(TransformStorage*& one, TransformStorage*& two, T
   }
 
   //If time == 0 return the latest
-  if (target_time == TimePoint(Duration::zero()))
+  if (target_time == TimePointZero)
   {
     one = &storage_.front();
     return 1;

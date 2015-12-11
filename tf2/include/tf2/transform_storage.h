@@ -42,10 +42,13 @@
 namespace tf2
 {
 
+//TODO(tfoote) get a better solution for this
+
 using TimePoint = std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
-using Duration = std::chrono::duration<int, std::nano>;
+using TempDuration = std::chrono::duration<double, std::nano>;
+using IDuration = std::chrono::duration<int, std::nano>;
 // This is the zero time in ROS
-static const TimePoint TimePointZero = TimePoint(Duration::zero());
+static const TimePoint TimePointZero = TimePoint(IDuration::zero());
 
 // Display functions as there is no default display
 // TODO: find a proper way to handle display
@@ -56,7 +59,7 @@ inline std::string displayTimePoint(const TimePoint& stamp)
   std::time_t time = std::chrono::system_clock::to_time_t(std::chrono::time_point_cast<std::chrono::milliseconds>(stamp));
   return std::ctime(&time);
 }
-inline double displayDuration(const Duration& duration)
+inline double displayDuration(const TempDuration& duration)
 {
   return std::chrono::duration_cast<std::chrono::seconds>(duration).count();
 }
