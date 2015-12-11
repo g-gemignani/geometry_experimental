@@ -80,13 +80,10 @@ void TransformListener::init()
 {
   rmw_qos_profile_t custom_qos_profile = rmw_qos_profile_default;
   custom_qos_profile.depth = 100;
-  // std::function<void(const tf2_msgs::msg::TFMessage::SharedPtr)> standard_callback = std::bind(&tf2_ros::TransformListener::subscription_callback, this, _1);
-  auto standard_callback = std::bind(&tf2_ros::TransformListener::subscription_callback, this, _1);
-  auto static_callback = std::bind(&tf2_ros::TransformListener::static_subscription_callback, this, _1);
-  // TODO(tfoote) UNCOMMENT
-  message_subscription_tf_ = node_->create_subscription<tf2_msgs::msg::TFMessage>("/tf", test_callback, custom_qos_profile);
-  // message_subscription_tf_ = node_->create_subscription<tf2_msgs::msg::TFMessage>("/tf", standard_callback, custom_qos_profile);
-  // message_subscription_tf_static_ = node_->create_subscription<tf2_msgs::msg::TFMessage>("/tf_static", static_callback, custom_qos_profile);
+  auto standard_callback = [this](const tf2_msgs::msg::TFMessage::SharedPtr msg) {this->subscription_callback(msg);};
+  auto static_callback = [this](const tf2_msgs::msg::TFMessage::SharedPtr msg) {this->static_subscription_callback(msg);};
+  message_subscription_tf_ = node_->create_subscription<tf2_msgs::msg::TFMessage>("/tf", standard_callback, custom_qos_profile);
+  message_subscription_tf_ = node_->create_subscription<tf2_msgs::msg::TFMessage>("/tf", static_callback, custom_qos_profile);
 }
 
 void TransformListener::initWithThread()
