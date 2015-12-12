@@ -32,13 +32,13 @@
 #ifndef TF2_ROS_TRANSFORMLISTENER_H
 #define TF2_ROS_TRANSFORMLISTENER_H
 
+#include <thread>
 #include "tf2_msgs/msg/tf_message.hpp"
 #include "rclcpp/rclcpp.hpp"
 // #include "ros/callback_queue.h"
 
 #include "tf2_ros/buffer.h"
 
-#include "boost/thread.hpp"
 
 namespace tf2_ros{
 
@@ -64,7 +64,7 @@ private:
   void subscription_callback_impl(const tf2_msgs::msg::TFMessage::SharedPtr msg, bool is_static);
 
   // ros::CallbackQueue tf_message_callback_queue_;
-  boost::thread* dedicated_listener_thread_;
+  std::thread* dedicated_listener_thread_;
   rclcpp::node::Node::SharedPtr node_;
   rclcpp::subscription::Subscription<tf2_msgs::msg::TFMessage>::SharedPtr message_subscription_tf_;
   rclcpp::subscription::Subscription<tf2_msgs::msg::TFMessage>::SharedPtr message_subscription_tf_static_;

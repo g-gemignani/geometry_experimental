@@ -47,6 +47,7 @@ target_link_libraries(test_simple tf2  ${geometry_msgs_LIBRARIES} ${console_brid
 
 endif()
 
+ament_export_dependencies(console_bridge)
 ament_export_include_directories(include)
 ament_export_libraries(tf2)
 ament_package()

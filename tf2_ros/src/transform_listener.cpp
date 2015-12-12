@@ -43,6 +43,8 @@ using namespace tf2_ros;
 TransformListener::TransformListener(tf2::BufferCore& buffer, bool spin_thread):
   dedicated_listener_thread_(NULL), buffer_(buffer), using_dedicated_thread_(false)
 {
+  //TODO(tfoote)make this anonymous
+  node_ = rclcpp::node::Node::make_shared("transform_listener");
   if (spin_thread)
     initWithThread();
   else
@@ -80,8 +82,9 @@ void TransformListener::init()
 {
   rmw_qos_profile_t custom_qos_profile = rmw_qos_profile_default;
   custom_qos_profile.depth = 100;
-  auto standard_callback = [this](const tf2_msgs::msg::TFMessage::SharedPtr msg) {this->subscription_callback(msg);};
-  auto static_callback = [this](const tf2_msgs::msg::TFMessage::SharedPtr msg) {this->static_subscription_callback(msg);};
+  std::cout << "this is " << (void*)this << std::endl;
+  std::function<void(const tf2_msgs::msg::TFMessage::SharedPtr)> standard_callback = std::bind(&TransformListener::subscription_callback, this, std::placeholders::_1);
+  std::function<void(const tf2_msgs::msg::TFMessage::SharedPtr)> static_callback = std::bind(&TransformListener::static_subscription_callback, this, std::placeholders::_1);
   message_subscription_tf_ = node_->create_subscription<tf2_msgs::msg::TFMessage>("/tf", standard_callback, custom_qos_profile);
   message_subscription_tf_ = node_->create_subscription<tf2_msgs::msg::TFMessage>("/tf", static_callback, custom_qos_profile);
 }

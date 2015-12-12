@@ -50,7 +50,7 @@ int main(int argc, char ** argv)
 {
   //Initialize ROS
   rclcpp::init(argc, argv);
-  auto node = rclcpp::node::Node::make_shared("static_transform_publisher");
+  auto node = rclcpp::node::Node::make_shared("static_transform_publisher_program");
   // ros::init(argc, argv,"static_transform_publisher", ros::init_options::AnonymousName);
   
   tf2_ros::StaticTransformBroadcaster broadcaster;

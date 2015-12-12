@@ -104,9 +104,23 @@ target_link_libraries(static_transform_publisher
   )
 
 
+add_executable(tf2_echo
+  src/tf2_echo.cpp
+)
+target_link_libraries(tf2_echo
+  ${PROJECT_NAME}
+  ${geometry_msgs_LIBRARIES}
+  ${rclcpp_LIBRARIES}
+  ${rmw_LIBRARIES}
+  ${rmw_implementation_LIBRARIES}
+  ${tf2_LIBRARIES}
+  ${tf2_msgs_LIBRARIES}
+  )
+
 # Install rules
 install(TARGETS
   ${PROJECT_NAME}
+  tf2_echo
   # buffer_server
   static_transform_publisher
   ARCHIVE DESTINATION lib
