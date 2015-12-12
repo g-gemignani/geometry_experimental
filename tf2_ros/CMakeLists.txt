@@ -71,7 +71,7 @@ add_library(${PROJECT_NAME}
   src/static_transform_broadcaster.cpp
 )
 
-set(upstream_libraries
+target_link_libraries(${PROJECT_NAME}
   ${geometry_msgs_LIBRARIES}
   ${rclcpp_LIBRARIES}
   ${rmw_LIBRARIES}
@@ -79,9 +79,6 @@ set(upstream_libraries
   ${tf2_LIBRARIES}
   ${tf2_msgs_LIBRARIES}
   )
-
-target_link_libraries(${PROJECT_NAME} ${upstream_LIBRARIES})
-
 # # buffer_server executable
 # add_executable(buffer_server src/buffer_server_main.cpp)
 # add_dependencies(${PROJECT_NAME}_buffer_server tf2_msgs_gencpp)
@@ -98,13 +95,18 @@ add_executable(static_transform_publisher
 )
 target_link_libraries(static_transform_publisher
   ${PROJECT_NAME}
-  ${upstream_LIBRARIES}
-)
+  ${geometry_msgs_LIBRARIES}
+  ${rclcpp_LIBRARIES}
+  ${rmw_LIBRARIES}
+  ${rmw_implementation_LIBRARIES}
+  ${tf2_LIBRARIES}
+  ${tf2_msgs_LIBRARIES}
+  )
 
 
 # Install rules
 install(TARGETS
-  # ${PROJECT_NAME}
+  ${PROJECT_NAME}
   # buffer_server
   static_transform_publisher
   ARCHIVE DESTINATION lib
