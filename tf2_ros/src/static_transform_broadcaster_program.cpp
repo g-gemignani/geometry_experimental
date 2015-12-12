@@ -122,7 +122,7 @@ int main(int argc, char ** argv)
     printf("Usage: static_transform_publisher x y z yaw pitch roll frame_id child_frame_id \n");
     printf("\nThis transform is the transform of the coordinate frame from frame_id into the coordinate frame \n");
     printf("of the child_frame_id.  \n");
-    //TODO uncomment ROS_ERROR("static_transform_publisher exited due to not having the right number of arguments");
+    ROS_ERROR("static_transform_publisher exited due to not having the right number of arguments");
     return -1;
   }
 

@@ -59,6 +59,11 @@ inline double TempToSec(const TempDuration & input){
   return std::chrono::duration_cast<std::chrono::seconds>(input).count();
 }
 
+inline double TempToSec(const TimePoint& timepoint)
+{
+  return TempToSec(timepoint.time_since_epoch());
+}
+
 // Display functions as there is no default display
 // TODO: find a proper way to handle display
 inline std::string displayTimePoint(const TimePoint& stamp)

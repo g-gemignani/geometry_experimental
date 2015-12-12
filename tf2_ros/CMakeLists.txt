@@ -117,10 +117,24 @@ target_link_libraries(tf2_echo
   ${tf2_msgs_LIBRARIES}
   )
 
+  add_executable(tf2_monitor
+    src/tf2_monitor.cpp
+  )
+  target_link_libraries(tf2_monitor
+    ${PROJECT_NAME}
+    ${geometry_msgs_LIBRARIES}
+    ${rclcpp_LIBRARIES}
+    ${rmw_LIBRARIES}
+    ${rmw_implementation_LIBRARIES}
+    ${tf2_LIBRARIES}
+    ${tf2_msgs_LIBRARIES}
+    )
+
 # Install rules
 install(TARGETS
   ${PROJECT_NAME}
   tf2_echo
+  tf2_monitor
   # buffer_server
   static_transform_publisher
   ARCHIVE DESTINATION lib

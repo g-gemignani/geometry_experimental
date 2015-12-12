@@ -57,6 +57,13 @@ namespace tf2_ros
     return t;
   }
 
+  inline double TempToSec(const builtin_interfaces::msg::Time & time_msg)
+  {
+    auto ns = std::chrono::nanoseconds(time_msg.nanosec);
+    auto s = std::chrono::seconds(time_msg.sec);
+    return (s + std::chrono::duration_cast<std::chrono::seconds>(ns)).count();
+  }
+
 // extend the TFCore class and the TFCpp class
 class BufferInterface
 {
