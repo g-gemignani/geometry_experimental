@@ -39,6 +39,7 @@ namespace tf2_ros {
 
 StaticTransformBroadcaster::StaticTransformBroadcaster()
 {
+  node_ = rclcpp::node::Node::make_shared("static_transform_publisher");
   rmw_qos_profile_t custom_qos_profile = rmw_qos_profile_default;
   custom_qos_profile.depth = 100;
   // TODO(tfoote) latched equivalent
