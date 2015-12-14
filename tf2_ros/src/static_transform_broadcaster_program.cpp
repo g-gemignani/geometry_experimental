@@ -55,62 +55,65 @@ int main(int argc, char ** argv)
   
   tf2_ros::StaticTransformBroadcaster broadcaster;
 
-  if(argc == 10)
+  if(argc == 10 or argc == 9)
   {
+    geometry_msgs::msg::TransformStamped msg;
 
-    if (strcmp(argv[8], argv[9]) == 0)
+    if (argc == 10)
     {
-      ROS_FATAL("target_frame and source frame are the same (%s, %s) this cannot work", argv[8], argv[9]);
-      return 1;
+      if (strcmp(argv[8], argv[9]) == 0)
+      {
+        ROS_FATAL("target_frame and source frame are the same (%s, %s) this cannot work", argv[8], argv[9]);
+        return 1;
+      }
+
+      msg.transform.translation.x = atof(argv[1]);
+      msg.transform.translation.y = atof(argv[2]);
+      msg.transform.translation.z = atof(argv[3]);
+      msg.transform.rotation.x = atof(argv[4]);
+      msg.transform.rotation.y = atof(argv[5]);
+      msg.transform.rotation.z = atof(argv[6]);
+      msg.transform.rotation.w = atof(argv[7]);
+      msg.header.stamp = tf2_ros::get_now_msg();
+      msg.header.frame_id = argv[8];
+      msg.child_frame_id = argv[9];
+    }
+    else if (argc == 9)
+    {
+      if (strcmp(argv[7], argv[8]) == 0)
+      {
+        ROS_FATAL("target_frame and source frame are the same (%s, %s) this cannot work", argv[8], argv[9]);
+        return 1;
+      }
+      
+      msg.transform.translation.x = atof(argv[1]);
+      msg.transform.translation.y = atof(argv[2]);
+      msg.transform.translation.z = atof(argv[3]);
+
+      tf2::Quaternion quat;
+      quat.setRPY(atof(argv[6]), atof(argv[5]), atof(argv[4]));
+      msg.transform.rotation.x = quat.x();
+      msg.transform.rotation.y = quat.y();
+      msg.transform.rotation.z = quat.z();
+      msg.transform.rotation.w = quat.w();
+
+      msg.header.stamp = tf2_ros::get_now_msg();
+      msg.header.frame_id = argv[7];
+      msg.child_frame_id = argv[8];
+    }
+    rclcpp::WallRate loop_rate(0.2);
+    while (rclcpp::ok())
+    {
+      //TODO(tfoote) reimplement latching
+      ROS_INFO("LOOPING due to no latching at the moment\n");
+      broadcaster.sendTransform(msg);
+      rclcpp::spin_some(node);
+      loop_rate.sleep();  
     }
 
-    geometry_msgs::msg::TransformStamped msg;
-    msg.transform.translation.x = atof(argv[1]);
-    msg.transform.translation.y = atof(argv[2]);
-    msg.transform.translation.z = atof(argv[3]);
-    msg.transform.rotation.x = atof(argv[4]);
-    msg.transform.rotation.y = atof(argv[5]);
-    msg.transform.rotation.z = atof(argv[6]);
-    msg.transform.rotation.w = atof(argv[7]);
-    msg.header.stamp = tf2_ros::get_now_msg();
-    msg.header.frame_id = argv[8];
-    msg.child_frame_id = argv[9];
-  
-
-
-  broadcaster.sendTransform(msg);
-  ROS_INFO("Spinning until killed publishing %s to %s", msg.header.frame_id.c_str(), msg.child_frame_id.c_str());
-  rclcpp::spin(node);
-
-  return 0;
-} 
-  else if (argc == 9)
-  {
-    if (strcmp(argv[7], argv[8]) == 0)
-    {
-      ROS_FATAL("target_frame and source frame are the same (%s, %s) this cannot work", argv[8], argv[9]);
-      return 1;
-    }
-    
-    geometry_msgs::msg::TransformStamped msg;
-    msg.transform.translation.x = atof(argv[1]);
-    msg.transform.translation.y = atof(argv[2]);
-    msg.transform.translation.z = atof(argv[3]);
-
-    tf2::Quaternion quat;
-    quat.setRPY(atof(argv[6]), atof(argv[5]), atof(argv[4]));
-    msg.transform.rotation.x = quat.x();
-    msg.transform.rotation.y = quat.y();
-    msg.transform.rotation.z = quat.z();
-    msg.transform.rotation.w = quat.w();
-
-    msg.header.stamp = tf2_ros::get_now_msg();
-    msg.header.frame_id = argv[7];
-    msg.child_frame_id = argv[8];
-
-    broadcaster.sendTransform(msg);
-    ROS_INFO("Spinning until killed publishing %s to %s", msg.header.frame_id.c_str(), msg.child_frame_id.c_str());
-    rclcpp::spin(node);
+    // broadcaster.sendTransform(msg);
+    // ROS_INFO("Spinning until killed publishing %s to %s", msg.header.frame_id.c_str(), msg.child_frame_id.c_str());
+    // rclcpp::spin(node);
     return 0;
   }
   else

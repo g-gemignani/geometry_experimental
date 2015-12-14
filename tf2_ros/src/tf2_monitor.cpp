@@ -63,8 +63,8 @@ public:
   std::shared_ptr<tf2_ros::TransformListener> tf_;
 
   tf2_msgs::msg::TFMessage message_;
-
   std::mutex map_mutex_;
+  
   void callback(const tf2_msgs::msg::TFMessage::SharedPtr msg)
   {
     const tf2_msgs::msg::TFMessage& message = *(msg);
@@ -134,7 +134,7 @@ public:
     if (using_specific_chain_)
     {
       std::cout << "Waiting for transform chain to become available between "<< framea_ << " and " << frameb_<< " " << std::flush;
-      while (rclcpp::ok() && !buffer_.canTransform(framea_, frameb_, tf2::TimePointZero, tf2::TempDuration(1.0)))
+      while (rclcpp::ok() && !buffer_.canTransform(framea_, frameb_, tf2::TimePointZero, tf2::TempDuration(1.0e9)))
         std::cout << "." << std::flush;
       std::cout << std::endl;
      
@@ -190,8 +190,8 @@ public:
     double avg_diff = 0;
     double lowpass = 0.01;
     unsigned int counter = 0;
-    
-  
+
+
 
   while (rclcpp::ok()){
     counter++;

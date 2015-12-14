@@ -56,7 +56,7 @@ private:
 
   /// Initialize this transform listener, subscribing, advertising services, etc.
   void init();
-  void initWithThread();
+  void initThread();
 
   /// Callback function for ros message subscriptoin
   void subscription_callback(const tf2_msgs::msg::TFMessage::SharedPtr msg);

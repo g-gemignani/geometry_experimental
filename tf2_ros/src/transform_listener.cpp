@@ -44,11 +44,10 @@ TransformListener::TransformListener(tf2::BufferCore& buffer, bool spin_thread):
   dedicated_listener_thread_(NULL), buffer_(buffer), using_dedicated_thread_(false)
 {
   //TODO(tfoote)make this anonymous
-  node_ = rclcpp::node::Node::make_shared("transform_listener");
+  node_ = rclcpp::node::Node::make_shared("transform_listener_impl");
+  init();
   if (spin_thread)
-    initWithThread();
-  else
-    init();
+    initThread();
 }
 
 TransformListener::TransformListener(tf2::BufferCore& buffer, rclcpp::node::Node::SharedPtr nh, bool spin_thread)
@@ -57,10 +56,9 @@ TransformListener::TransformListener(tf2::BufferCore& buffer, rclcpp::node::Node
 , buffer_(buffer)
 , using_dedicated_thread_(false)
 {
+  init();
   if (spin_thread)
-    initWithThread();
-  else
-    init();
+    initThread();
 }
 
 
@@ -88,21 +86,12 @@ void TransformListener::init()
   message_subscription_tf_static_ = node_->create_subscription<tf2_msgs::msg::TFMessage>("/tf_static", static_callback, custom_qos_profile);
 }
 
-void TransformListener::initWithThread()
+void TransformListener::initThread()
 {
-  this->init();
-  //TODO(tfoote) reenable dedicated thread
-  // using_dedicated_thread_ = true;
-  // ros::SubscribeOptions ops_tf = ros::SubscribeOptions::create<tf2_msgs::TFMessage>("/tf", 100, boost::bind(&TransformListener::subscription_callback, this, _1), ros::VoidPtr(), &tf_message_callback_queue_); ///\todo magic number
-  // message_subscription_tf_ = node_.subscribe(ops_tf);
-  // 
-  // ros::SubscribeOptions ops_tf_static = ros::SubscribeOptions::create<tf2_msgs::TFMessage>("/tf_static", 100, boost::bind(&TransformListener::static_subscription_callback, this, _1), ros::VoidPtr(), &tf_message_callback_queue_); ///\todo magic number
-  // message_subscription_tf_static_ = node_.subscribe(ops_tf_static);
-  // 
-  // dedicated_listener_thread_ = new boost::thread(boost::bind(&TransformListener::dedicatedListenerThread, this));
-  // 
-  // //Tell the buffer we have a dedicated thread to enable timeouts
-  // buffer_.setUsingDedicatedThread(true);
+  using_dedicated_thread_ = true;
+  dedicated_listener_thread_ = new std::thread(std::bind( &rclcpp::spin, node_ ));
+  //Tell the buffer we have a dedicated thread to enable timeouts
+  buffer_.setUsingDedicatedThread(true);
 }
 
 
